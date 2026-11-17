@@ -4,7 +4,7 @@ Même format que le cadre « TP · Sprint 2 » du Miro. On remplit les deux au f
 
 Objectif du sprint : « Marc peut signaler une zone sale et elle apparaît sur la carte. »
 
-Prévu : 11 pts · Terminé : __ pts (à 12 h 00)
+Prévu : 11 pts · Terminé : 11 pts (à 12 h 00)
 
 ## Sprint planning (10 h 10, 5 min)
 
@@ -19,8 +19,8 @@ Règle prévue (étape 6) : sprint le plus chargé. Si US21 déborde, la découp
 
 | Item | Points | Branche | État | Commit ou fusion |
 |---|---|---|---|---|
-| US2 – Afficher la carte de la rade | 3 | `s2/us2-carte` | à faire | |
-| US21 – Signaler une zone (photo, GPS, type, quantité) | 8 | `s2/us21-signaler` | à faire | |
+| US2 – Afficher la carte de la rade | 3 | `s2/us2-carte` | terminé | `33753c4`, fusion `6ff443b` |
+| US21 – Signaler une zone (photo, GPS, type, quantité) | 8 | `s2/us21-signaler` | terminé | `68aa35b, 0e363fd`, fusion `786f3c6` |
 
 États possibles : à faire, en cours, terminé (testé, montrable, fusionné sur main).
 
@@ -28,11 +28,13 @@ Règle prévue (étape 6) : sprint le plus chargé. Si US21 déborde, la découp
 
 Décisions prises pendant le sprint :
 
--
+- Le MVP se découpe en un site (carte, signalement) et une app (concept BeReal), reliés par `commun/` et des liens `?zone=ID` dans les deux sens.
+- US21 : le formulaire (étape 1) puis la logique (étape 2) ont été faits en deux commits, comme prévu par la règle de découpage A/B.
+- Charte graphique alignée sur le site déjà publié par l'équipe (dépôt GitHub generation-zero-dechet) : nom « Génération Z(éro déchet) », logo GZ, DM Sans et Outfit.
 
 Blocages rencontrés et comment on les a levés :
 
--
+- Le site et l'app avancent en parallèle : chacun sur ses branches et son dossier, le socle `commun/` a été fusionné en premier pour éviter les conflits.
 
 ## Revue croisée (11 h 45 nous présentons, 11 h 50 l'équipe jumelle présente)
 
@@ -67,6 +69,6 @@ Amélioration choisie pour le sprint 3 (une seule) :
 ## Fin du sprint (12 h 00)
 
 ```
-./scripts/fin-de-sprint.sh 2 "__ points terminés sur 11"
+./scripts/fin-de-sprint.sh 2 "11 points terminés sur 11"
 git push --tags
 ```

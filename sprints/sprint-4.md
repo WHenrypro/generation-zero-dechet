@@ -4,7 +4,7 @@ Même format que le cadre « TP · Sprint 4 » du Miro. On remplit les deux au f
 
 Objectif du sprint : « Léa prouve son action et la zone passe au vert. Démo complète. »
 
-Prévu : 9 pts · Terminé : __ pts (à 17 h 55)
+Prévu : 9 pts · Terminé : 9 pts (à 17 h 55)
 
 ## Sprint planning (16 h 05, 5 min)
 
@@ -19,10 +19,10 @@ Règle prévue (étape 6) : sprint volontairement plus léger, garder 20 min pou
 
 | Item | Points | Branche | État | Commit ou fusion |
 |---|---|---|---|---|
-| US7 – Prendre la photo avant | 3 | `s4/us7-photo-avant` | à faire | |
-| US9 – Prendre la photo après | 2 | `s4/us9-photo-apres` | à faire | |
-| US10 – Publier l'avant/après | 3 | `s4/us10-publier` | à faire | |
-| US11 – La zone passe au vert | 1 | `s4/us11-zone-verte` | à faire | |
+| US7 – Prendre la photo avant | 3 | `s4/us7-photo-avant` | terminé | `d359f18`, fusion `e8f252f` |
+| US9 – Prendre la photo après | 2 | `s4/us9-photo-apres` | terminé | `3e475af`, fusion `ff40191` |
+| US10 – Publier l'avant/après | 3 | `s4/us10-publier` | terminé | `e8c3213`, fusion `60a31d7` |
+| US11 – La zone passe au vert | 1 | `s4/us11-zone-verte` | terminé | `4f38c63`, fusion `e2c2fba` |
 
 États possibles : à faire, en cours, terminé (testé, montrable, fusionné sur main).
 
@@ -30,11 +30,13 @@ Règle prévue (étape 6) : sprint volontairement plus léger, garder 20 min pou
 
 Décisions prises pendant le sprint :
 
--
+- La publication passe la zone au vert tout de suite (pas de modération), un écran « Bravo » renvoie vers la carte.
+- Bouton « Réinitialiser la démo » dans l'onglet Moi, visible seulement en mode local, pour rejouer la démo en revue.
+- US16 (minuteur 10 min) et US8 (état orange) restent hors MVP, notés comme suite sur le Miro.
 
 Blocages rencontrés et comment on les a levés :
 
--
+- Les photos en mode local sont des data URL dans le localStorage (quelques Mo) : réduction à 1024 px en JPEG et message si le stockage est plein.
 
 ## Revue croisée (17 h 40 nous présentons, 17 h 45 l'équipe jumelle présente)
 
@@ -69,6 +71,6 @@ Amélioration choisie pour la suite (livrable du 21 janvier) (une seule) :
 ## Fin du sprint (17 h 55)
 
 ```
-./scripts/fin-de-sprint.sh 4 "__ points terminés sur 9"
+./scripts/fin-de-sprint.sh 4 "9 points terminés sur 9"
 git push --tags
 ```
