@@ -1,24 +1,34 @@
 /*
- * Géné Z(éro) Déchet, l'app : feuille de style
- * Thème sombre façon BeReal, mobile d'abord. Sur ordinateur, l'app reste
- * dans une colonne de 480 px centrée, comme un téléphone posé sur l'écran.
+ * Génération Z(éro déchet), l'app du ramassage : feuille de style
+ * Charte alignée sur le site de l'équipe (dépôt generation-zero-dechet) :
+ * thème clair, DM Sans pour le texte, Outfit pour les titres, vert #167e66.
+ * Mobile d'abord. Sur ordinateur, l'app reste dans une colonne de 480 px
+ * centrée, comme un téléphone posé sur l'écran.
  */
 
 :root {
-  --fond: #0B0F14;
-  --fond-carte: #141B24;
-  --fond-carte-2: #1A2330;
-  --bord: #243040;
-  --texte: #F1F5F9;
-  --texte-doux: #A6B2C1;
-  --texte-sombre: #0B0F14;
-  --vert: #2E9E5B;
-  --vert-clair: #8FE07A;
-  --rouge: #D64545;
-  --orange: #F28C28;
-  --rayon: 18px;
-  --rayon-petit: 12px;
-  --ombre: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --ink: #173334;
+  --muted: #657a78;
+  --green: #167e66;
+  --pale: #e7f4ed;
+  --border: #d9e6df;
+  --bg: #f4f7f4;
+  --red: #d65c55;
+  --orange: #ec9a3d;
+  --shadow: 0 14px 40px rgba(22, 57, 48, 0.09);
+
+  --entete: #123c39;
+  --blanc: #FFFFFF;
+  --etat-rouge: #d65752;
+  --etat-orange: #e69a38;
+  --etat-vert: #239b65;
+
+  --police-texte: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --police-titre: "Outfit", "DM Sans", system-ui, sans-serif;
+
+  --rayon-carte: 19px;
+  --rayon-sous-carte: 13px;
+  --rayon-bouton: 12px;
   --hauteur-nav: 64px;
 }
 
@@ -32,16 +42,21 @@
 }
 
 html {
-  background: var(--fond);
+  background: var(--bg);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  color: var(--texte);
-  background: var(--fond);
+  font-family: var(--police-texte);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--police-titre);
 }
 
 /* ---------- Colonne de l'app ---------- */
@@ -54,73 +69,132 @@ body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  background: var(--bg);
 }
 
 @media (min-width: 520px) {
   .app {
-    border-left: 1px solid var(--bord);
-    border-right: 1px solid var(--bord);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
   }
 }
 
+/* ---------- En-tête ---------- */
+
 .entete {
-  padding: 16px 16px 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--entete);
+  color: var(--blanc);
+}
+
+.logo {
+  flex: none;
+  padding: 12px;
+  border-radius: 15px;
+  background: #bde4ad;
+  color: #174b37;
+  font-family: var(--police-titre);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.5px;
 }
 
 .entete h1 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.2px;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .entete .sous-titre {
-  margin-left: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--vert-clair);
+  display: block;
+  margin-top: 2px;
+  font-family: var(--police-texte);
+  font-size: 12px;
+  font-weight: 500;
+  color: #bcd2cd;
 }
 
 .contenu {
   flex: 1;
-  padding: 8px 16px calc(var(--hauteur-nav) + 24px);
+  padding: 12px 16px 16px;
 }
 
 .ecran h2 {
   margin: 8px 0 14px;
-  font-size: 1.45rem;
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.slogan {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---------- Pied de page ---------- */
+
+.pied {
+  margin: 0;
+  padding: 12px 16px calc(var(--hauteur-nav) + 20px);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
 }
 
 /* ---------- Textes ---------- */
 
-.aide {
+.aide,
+.hint {
   margin: 0 0 14px;
-  color: var(--texte-doux);
-  font-size: 0.95rem;
+  color: var(--muted);
+  font-size: 0.92rem;
   line-height: 1.45;
 }
 
 .aide-petite {
-  font-size: 0.8rem;
+  font-size: 12px;
 }
 
 .etiquette {
-  margin: 0 0 4px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: var(--texte-doux);
+  color: var(--muted);
 }
 
-.a-venir {
+.a-venir,
+.vide {
   margin: 0;
   padding: 24px 16px;
-  border: 1px dashed var(--bord);
-  border-radius: var(--rayon);
-  color: var(--texte-doux);
+  border: 1px dashed var(--border);
+  border-radius: var(--rayon-carte);
+  background: var(--blanc);
+  color: var(--muted);
   text-align: center;
+  line-height: 1.45;
+}
+
+.notice {
+  margin: 0 0 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #eaf5ef;
+  color: #286650;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.notice.avertissement {
+  background: #fff3e4;
+  color: #9c611c;
 }
 
 /* ---------- Messages (aria-live) ---------- */
@@ -129,15 +203,15 @@ body {
   position: sticky;
   top: 8px;
   z-index: 20;
-  margin: 0 16px 8px;
-  padding: 10px 14px;
-  border-radius: var(--rayon-petit);
-  background: #1F2A37;
-  border-left: 4px solid var(--vert-clair);
-  color: var(--texte);
-  font-size: 0.92rem;
+  margin: 8px 16px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: #eaf5ef;
+  color: #286650;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
-  box-shadow: var(--ombre);
+  box-shadow: var(--shadow);
 }
 
 .message:empty {
@@ -145,7 +219,8 @@ body {
 }
 
 .message.erreur {
-  border-left-color: var(--rouge);
+  background: #fff3e4;
+  color: #9c611c;
 }
 
 /* ---------- Cartes ---------- */
@@ -153,16 +228,19 @@ body {
 .carte {
   margin: 0 0 14px;
   padding: 16px;
-  border-radius: var(--rayon);
-  background: var(--fond-carte);
-  border: 1px solid var(--bord);
+  border-radius: var(--rayon-carte);
+  background: var(--blanc);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .carte-profil .pseudo {
   margin: 0 0 14px;
-  font-size: 1.6rem;
+  font-family: var(--police-titre);
+  font-size: 36px;
   font-weight: 800;
-  color: var(--vert-clair);
+  line-height: 1.1;
+  color: var(--green);
   overflow-wrap: anywhere;
 }
 
@@ -176,52 +254,52 @@ body {
 .bouton {
   display: block;
   width: 100%;
-  padding: 15px 18px;
+  padding: 11px 15px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--rayon-bouton);
   font: inherit;
-  font-size: 1.05rem;
+  font-size: 15px;
   font-weight: 700;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.08s, background-color 0.15s;
-}
-
-.bouton:active {
-  transform: scale(0.98);
+  transition: filter 0.15s, background-color 0.15s;
 }
 
 .bouton:focus-visible,
 .champ:focus-visible,
 .onglet:focus-visible {
-  outline: 3px solid var(--vert-clair);
+  outline: 3px solid #75b5a0;
   outline-offset: 2px;
 }
 
 .bouton-principal {
-  background: var(--vert-clair);
-  color: var(--texte-sombre);
+  background: var(--green);
+  color: var(--blanc);
 }
 
 .bouton-principal:hover:not(:disabled) {
-  background: #A4EA92;
+  filter: brightness(0.94);
 }
 
 .bouton-principal:disabled {
-  background: #3A4656;
-  color: var(--texte-doux);
+  opacity: 0.48;
   cursor: not-allowed;
 }
 
 .bouton-secondaire {
-  background: var(--fond-carte-2);
-  color: var(--texte);
-  border: 1px solid var(--bord);
+  background: #eef4f0;
+  color: var(--ink);
 }
 
 .bouton-secondaire:hover {
-  background: #22303F;
+  filter: brightness(0.96);
+}
+
+.bouton-fantome {
+  background: var(--blanc);
+  color: var(--ink);
+  border: 1px solid var(--border);
 }
 
 .bouton-large {
@@ -232,39 +310,40 @@ body {
   margin-top: 6px;
   padding: 10px;
   background: transparent;
-  color: var(--texte-doux);
+  color: var(--muted);
   font-weight: 600;
 }
 
 .bouton-lien:hover {
-  color: var(--texte);
+  color: var(--ink);
 }
 
 label {
   display: block;
   margin: 0 0 6px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .champ {
   display: block;
   width: 100%;
   margin: 0 0 6px;
-  padding: 14px 16px;
-  border: 1px solid var(--bord);
-  border-radius: var(--rayon-petit);
-  background: var(--fond-carte);
-  color: var(--texte);
+  padding: 10px;
+  border: 1px solid #d5e1dc;
+  border-radius: 10px;
+  background: var(--blanc);
+  color: var(--ink);
   font: inherit;
-  font-size: 1.1rem;
+  font-size: 16px;
 }
 
 .champ::placeholder {
-  color: #6B7A8C;
+  color: #9aaba8;
 }
 
 .lien {
-  color: var(--vert-clair);
+  color: var(--green);
   font-weight: 600;
   text-decoration: none;
 }
@@ -275,82 +354,88 @@ label {
 
 /* ---------- [S3][US5] Cartes de zones ---------- */
 
+.carte-zone {
+  margin: 0 0 10px;
+  padding: 13px;
+  border-radius: var(--rayon-sous-carte);
+  background: var(--blanc);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.carte-zone:hover,
+.carte-zone:active {
+  border-color: #75b5a0;
+  background: #f3faf6;
+}
+
 .carte-zone h3,
 .nom-zone {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   line-height: 1.25;
 }
 
 .carte-zone .commune,
 .aide-zone {
   margin: 2px 0 10px;
-  color: var(--texte-doux);
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
 .carte-zone.mise-en-avant {
-  border-color: var(--vert);
-  box-shadow: 0 0 0 1px var(--vert);
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px var(--green);
 }
 
 .details {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 14px;
+  gap: 6px;
+  margin: 0 0 12px;
   padding: 0;
   list-style: none;
 }
 
 .details li {
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: var(--fond-carte-2);
-  border: 1px solid var(--bord);
-  font-size: 0.82rem;
-  color: var(--texte);
+  padding: 5px 9px;
+  border-radius: 100px;
+  background: var(--pale);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
 }
 
 .details li.distance {
-  color: var(--vert-clair);
+  background: var(--green);
+  color: var(--blanc);
   font-weight: 700;
 }
 
 .badge {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.78rem;
+  padding: 5px 9px;
+  border-radius: 100px;
+  font-size: 11px;
   font-weight: 700;
-  color: #FFFFFF;
-  background: var(--texte-doux);
+  background: var(--pale);
+  color: var(--muted);
 }
 
-.badge-rouge  { background: var(--rouge); }
-.badge-orange { background: var(--orange); color: var(--texte-sombre); }
-.badge-vert   { background: var(--vert); }
+.badge-rouge  { background: #fbe9e7; color: #ae3e3a; }
+.badge-orange { background: #fff0d9; color: #9e5d09; }
+.badge-vert   { background: #def4e7; color: #17764c; }
 
 .actions-ligne {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
 .actions-ligne .bouton {
-  padding: 13px 10px;
-  font-size: 0.98rem;
-}
-
-.vide {
-  margin: 0;
-  padding: 24px 16px;
-  border: 1px dashed var(--bord);
-  border-radius: var(--rayon);
-  color: var(--texte-doux);
-  text-align: center;
-  line-height: 1.45;
+  padding: 11px 8px;
+  font-size: 14px;
 }
 
 /* ---------- [S3][US5] Ramassage en cours : les étapes ---------- */
@@ -376,7 +461,7 @@ label {
   top: 32px;
   bottom: 0;
   width: 2px;
-  background: var(--bord);
+  background: var(--border);
 }
 
 .etape .numero {
@@ -387,9 +472,10 @@ label {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--fond-carte-2);
-  border: 2px solid var(--bord);
-  color: var(--texte-doux);
+  background: var(--blanc);
+  border: 2px solid var(--border);
+  color: var(--muted);
+  font-family: var(--police-titre);
   font-weight: 800;
   font-size: 0.9rem;
 }
@@ -403,7 +489,7 @@ label {
 .etape-corps h3 {
   margin: 0 0 6px;
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .etape-corps .aide {
@@ -411,19 +497,19 @@ label {
 }
 
 .etape[data-etat="courante"] .numero {
-  background: var(--vert-clair);
-  border-color: var(--vert-clair);
-  color: var(--texte-sombre);
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--blanc);
 }
 
 .etape[data-etat="faite"] .numero {
-  background: var(--vert);
-  border-color: var(--vert);
-  color: #FFFFFF;
+  background: var(--etat-vert);
+  border-color: var(--etat-vert);
+  color: var(--blanc);
 }
 
 .etape[data-etat="faite"]:not(:last-child)::before {
-  background: var(--vert);
+  background: var(--etat-vert);
 }
 
 .etape[data-etat="a-venir"] .etape-corps {
@@ -435,10 +521,84 @@ label {
   display: none;
 }
 
+/* ---------- [S4][US7] Photos : bouton appareil photo et aperçu ---------- */
+
+/* Caché à l'écran mais toujours là pour le clavier et les lecteurs d'écran */
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.bouton-photo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  font-size: 16px;
+}
+
+.bouton-photo .icone {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.bouton-photo:focus-within {
+  outline: 3px solid #75b5a0;
+  outline-offset: 2px;
+}
+
+.bouton-photo.en-cours {
+  opacity: 0.48;
+  pointer-events: none;
+}
+
+.apercu {
+  position: relative;
+  margin: 0 0 6px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--blanc);
+  border: 1px solid var(--border);
+}
+
+.apercu img {
+  display: block;
+  width: 100%;
+  max-height: 60vh;
+  object-fit: cover;
+}
+
+.apercu figcaption {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 5px 9px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
 /* ---------- Écran pseudo ---------- */
 
 .ecran-pseudo {
-  padding-top: 32px;
+  padding-top: 20px;
 }
 
 .ecran-pseudo h2 {
@@ -446,7 +606,12 @@ label {
 }
 
 .ecran-pseudo form {
-  margin-top: 20px;
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--rayon-carte);
+  background: var(--blanc);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .ecran-pseudo .bouton-principal {
@@ -466,9 +631,9 @@ label {
   height: calc(var(--hauteur-nav) + env(safe-area-inset-bottom, 0px));
   margin: 0 auto;
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  background: rgba(11, 15, 20, 0.96);
-  border-top: 1px solid var(--bord);
-  backdrop-filter: blur(8px);
+  background: var(--blanc);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 24px rgba(22, 57, 48, 0.06);
 }
 
 .onglet {
@@ -481,9 +646,9 @@ label {
   padding: 6px 0;
   border: 0;
   background: transparent;
-  color: var(--texte-doux);
+  color: var(--muted);
   font: inherit;
-  font-size: 0.78rem;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -499,14 +664,14 @@ label {
 }
 
 .onglet[aria-selected="true"] {
-  color: var(--vert-clair);
+  color: var(--green);
 }
 
 .noscript {
   max-width: 480px;
   margin: 16px auto;
   padding: 12px 16px;
-  background: #3B2A12;
-  color: #FFE3B3;
-  border-radius: var(--rayon-petit);
+  background: #fff3e4;
+  color: #9c611c;
+  border-radius: 12px;
 }

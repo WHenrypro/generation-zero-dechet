@@ -3,16 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Géné Z(éro) Déchet · l'app</title>
+  <title>Génération Z(éro déchet) · l'app du ramassage</title>
   <meta name="description" content="L'app du ramassage : choisis une zone rouge près de toi, photo avant, photo après, publie. La zone passe au vert sur la carte.">
-  <meta name="theme-color" content="#0B0F14">
+  <meta name="theme-color" content="#123c39">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap">
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
   <div class="app">
 
     <header class="entete">
-      <h1>Géné Z(éro) Déchet <span class="sous-titre">l'app</span></h1>
+      <span class="logo" aria-hidden="true">GZ</span>
+      <h1>Génération Z(éro déchet) <span class="sous-titre">l'app du ramassage</span></h1>
     </header>
 
     <!-- Messages courts (erreurs, confirmations). Toujours présent pour que
@@ -24,6 +28,7 @@
       <!-- [S3][US1] Écran pseudo : affiché tant qu'aucun pseudo n'est enregistré,
            ou quand on veut en changer. Rien d'autre n'est demandé. -->
       <section id="ecran-pseudo" class="ecran ecran-pseudo" aria-labelledby="titre-pseudo" hidden>
+        <p class="slogan">Ensemble, rendons la rade plus propre.</p>
         <h2 id="titre-pseudo">Choisis ton pseudo</h2>
         <p class="aide">Pas de compte, pas de mot de passe. Juste un pseudo pour signer tes ramassages.</p>
         <form id="formulaire-pseudo" novalidate>
@@ -71,18 +76,34 @@
           </div>
 
           <ol class="etapes" aria-label="Les étapes du ramassage">
+            <!-- [S4][US7] Étape 1 : la photo avant. L'input file avec capture
+                 ouvre directement l'appareil photo sur un téléphone. -->
             <li class="etape" id="etape-1" data-etat="courante">
               <span class="numero" aria-hidden="true">1</span>
               <div class="etape-corps">
                 <h3>Photo avant</h3>
-                <p class="aide a-venir-etape">La photo avant arrive au prochain item.</p>
+                <div id="avant-prise">
+                  <p class="aide">Montre la zone telle que tu la trouves. Sans filtre, sans mise en scène.</p>
+                  <label class="bouton bouton-principal bouton-photo" for="fichier-avant">
+                    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                    <span>Photo avant</span>
+                    <input type="file" id="fichier-avant" class="visuellement-cache" accept="image/*" capture="environment">
+                  </label>
+                </div>
+                <figure class="apercu" id="avant-apercu" hidden>
+                  <img id="avant-image" alt="Ta photo avant le ramassage">
+                  <figcaption>Avant</figcaption>
+                </figure>
+                <label class="bouton bouton-lien seulement-courante" id="avant-reprendre" for="fichier-avant" hidden>Reprendre la photo avant</label>
               </div>
             </li>
+            <!-- [S4][US7] Étape 2 : le ramassage lui-même -->
             <li class="etape" id="etape-2" data-etat="a-venir">
               <span class="numero" aria-hidden="true">2</span>
               <div class="etape-corps">
                 <h3>Ramasser</h3>
                 <p class="aide">Ramasse, on t'attend.</p>
+                <button type="button" id="bouton-fini" class="bouton bouton-principal seulement-courante">J'ai fini, photo après</button>
               </div>
             </li>
             <li class="etape" id="etape-3" data-etat="a-venir">
@@ -124,6 +145,8 @@
       </section>
 
     </main>
+
+    <footer class="pied">Prototype pédagogique · ISEN Brest · Données locales au navigateur · Les zones affichées sont fictives.</footer>
 
     <!-- Barre du bas : les trois onglets -->
     <nav class="navigation" role="tablist" aria-label="Sections de l'app">
