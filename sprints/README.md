@@ -31,4 +31,5 @@ Hypothèse de départ : 10 points par sprint (étape 6 du TD1). Les colonnes « 
 | Sprint 2 | Réalisation | Charte graphique alignée sur le site publié par l'équipe sur GitHub (generation-zero-dechet) | Un seul produit, une seule identité pour la démo | Léane |
 | Sprint 3 | Planning | US5 découpée en deux branches, site et app | Le bouton « J'y vais » vit sur le site, le ramassage dans l'app | Équipe |
 | Sprint 4 | Planning | US8 (orange) et US16 (minuteur) restent hors MVP | 13 Must d'abord, le reste est décrit sur le Miro | PO |
+| Sprint 4 | Réalisation | Une publication exemple dans le feed au premier lancement | Démo et revue croisée lisibles, pas d'écran vide | Léane |
 | | | | | |
