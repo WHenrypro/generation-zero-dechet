@@ -106,10 +106,19 @@
                 <button type="button" id="bouton-fini" class="bouton bouton-principal seulement-courante">J'ai fini, photo après</button>
               </div>
             </li>
+            <!-- [S4][US9] Étape 3 : la photo après, même mécanique que l'avant -->
             <li class="etape" id="etape-3" data-etat="a-venir">
               <span class="numero" aria-hidden="true">3</span>
               <div class="etape-corps">
                 <h3>Photo après</h3>
+                <div class="seulement-courante">
+                  <p class="aide">Même endroit, même cadrage : montre le résultat.</p>
+                  <label class="bouton bouton-principal bouton-photo" for="fichier-apres">
+                    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                    <span>Photo après</span>
+                    <input type="file" id="fichier-apres" class="visuellement-cache" accept="image/*" capture="environment">
+                  </label>
+                </div>
               </div>
             </li>
             <li class="etape" id="etape-4" data-etat="a-venir">
@@ -121,6 +130,34 @@
           </ol>
 
           <button type="button" id="bouton-abandonner" class="bouton bouton-lien">Abandonner ce ramassage</button>
+        </div>
+
+        <!-- [S4][US9] Vue 3 : relecture avant / après avant de publier -->
+        <div id="vue-relecture" hidden>
+          <h2>Avant / après</h2>
+          <p class="aide">Relis tes deux photos. Si c'est bon, publie : ton ramassage apparaîtra dans le feed.</p>
+          <div class="carte">
+            <p class="nom-zone" id="relecture-nom"></p>
+            <p class="aide aide-zone" id="relecture-commune"></p>
+            <div class="avant-apres">
+              <figure class="apercu">
+                <img id="relecture-avant" alt="Photo avant le ramassage">
+                <figcaption>Avant</figcaption>
+              </figure>
+              <figure class="apercu">
+                <img id="relecture-apres" alt="Photo après le ramassage">
+                <figcaption>Après</figcaption>
+              </figure>
+            </div>
+            <div class="actions">
+              <button type="button" id="bouton-publier" class="bouton bouton-principal" disabled>Publier</button>
+              <label class="bouton bouton-fantome" for="fichier-apres-reprise">
+                Reprendre l'après
+                <input type="file" id="fichier-apres-reprise" class="visuellement-cache" accept="image/*" capture="environment">
+              </label>
+            </div>
+          </div>
+          <button type="button" id="bouton-abandonner-relecture" class="bouton bouton-lien">Abandonner ce ramassage</button>
         </div>
 
       </section>
