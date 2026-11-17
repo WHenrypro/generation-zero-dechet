@@ -38,6 +38,8 @@ Décisions prises pendant le sprint :
 
 - Logo officiel de l'équipe (Z et vague, `commun/img/logo.svg`) et slogan « Pas de planète B, mais une génération Z. » repris dans l'app et l'accueil (branche `s4/charte-logo`).
 
+- Le dossier `site/` devient une copie du site de l'équipe (dépôt generation-zero-dechet, `sprint4/`) : l'app renvoie vers leur carte, pas vers un second site. Limite : leur site stocke en IndexedDB, l'app en localStorage, le rapprochement est à faire ensemble.
+
 Blocages rencontrés et comment on les a levés :
 
 - Les photos en mode local sont des data URL dans le localStorage (quelques Mo) : réduction à 1024 px en JPEG et message si le stockage est plein.

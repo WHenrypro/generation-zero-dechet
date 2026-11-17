@@ -10,14 +10,14 @@ Tickets : projet « MVP » dans Linear, jalons Sprint 1 à 4.
 
 Décision du planning du sprint 2 : le MVP a deux faces qui partagent les mêmes données.
 
-- **Le site, la carte** (`site/`) : la carte interactive de la rade, les zones en rouge / orange / vert, le signalement d'une zone sale avec photo et position (persona Marc, le riverain qui voit une plage sale), la fiche d'une zone et le bouton « J'y vais » qui ouvre l'app sur cette zone.
+- **Le site, la carte** (`site/`) : réalisé par l'équipe dans son dépôt https://github.com/WHenrypro/generation-zero-dechet (dossier `sprint4/`), recopié ici tel quel. La carte interactive de la rade, les zones en rouge / orange / vert, le signalement d'une zone sale avec photo et position (persona Marc, le riverain qui voit une plage sale), la fiche d'une zone.
 - **L'app, le ramassage** (`app/`) : le concept façon BeReal (persona Léa, l'étudiante téléphone en main). Un pseudo, pas de compte. Elle choisit une zone rouge proche, prend une photo avant, ramasse, prend une photo après, publie. La zone passe au vert sur la carte et l'avant / après apparaît dans le feed.
-- **Ce qui les relie** (`commun/`) : la même couche de données (`store.js`, mode local ou Supabase), la même réduction des photos, le même pseudo, et des liens dans les deux sens : `site/?zone=ID` ouvre la fiche d'une zone, `app/?zone=ID` lance le ramassage de cette zone.
+- **Ce qui les relie** (`commun/`) : la couche de données de l'app (`store.js`, mode local ou Supabase), la réduction des photos, le pseudo. L'app renvoie vers le site de l'équipe (« Voir sur la carte ») et `app/?zone=ID` lance le ramassage d'une zone. Limite connue : le site de l'équipe stocke en IndexedDB, l'app en localStorage, le rapprochement des deux est à faire ensemble.
 
 ## Ce qu'il y a dans le dépôt
 
 - `index.html` : page d'accueil, deux entrées (le site, l'app). C'est elle que GitHub Pages sert.
-- `site/` : la carte (Leaflet, OpenStreetMap), le signalement, les fiches. Voir `site/README.md`.
+- `site/` : copie du site de l'équipe (Leaflet, OpenStreetMap, IndexedDB). Voir `site/README.md`. `logo.png` à la racine est le leur aussi.
 - `app/` : l'app de ramassage. Voir `app/README.md`.
 - `commun/` : `js/store.js` (zones et publications, localStorage par défaut, Supabase si `js/config.js` existe), `js/photos.js`, `js/session.js`, `data/zones.geojson` (15 zones de démo), `js/config.example.js`.
 - `supabase/` : schéma SQL (zones, publications) et données de démo, pour passer en base partagée.

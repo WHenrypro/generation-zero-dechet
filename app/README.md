@@ -1,6 +1,6 @@
 # Génération Z(éro déchet), l'app du ramassage
 
-Le parcours de Léa : choisir une zone rouge près de soi, prendre une photo avant, ramasser, prendre une photo après, publier. La zone passe au vert sur la carte du site (`../site/`).
+Le parcours de Léa : choisir une zone rouge près de soi, prendre une photo avant, ramasser, prendre une photo après, publier. La zone passe au vert dans l'app et dans le feed. Le bouton « Voir sur la carte » ouvre le site de l'équipe (`../site/`, copie de leur dossier `sprint4/`).
 
 Pas de framework, pas de build : du HTML, du CSS et un fichier `js/app.js` en JavaScript classique. Les scripts partagés avec le site sont dans `../commun/js/` (store, photos, session).
 
