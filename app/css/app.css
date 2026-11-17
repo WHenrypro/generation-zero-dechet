@@ -622,6 +622,46 @@ label {
   outline-offset: 2px;
 }
 
+/* ---------- [S4][US10] Feed des ramassages ---------- */
+
+.carte-vide {
+  text-align: center;
+}
+
+.carte-vide p {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
+.publication {
+  margin-bottom: 14px;
+}
+
+.publication .en-tete {
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+.publication .pseudo-auteur {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.publication .date {
+  display: block;
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.publication .avant-apres {
+  margin-bottom: 12px;
+}
+
+.publication .lien {
+  font-weight: 600;
+}
+
 /* ---------- Écran pseudo ---------- */
 
 .ecran-pseudo {

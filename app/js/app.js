@@ -12,6 +12,7 @@
  * Sprint 4 (US7) : photo avant, réduite par GZD.photos et gardée dans le
  *                  ramassage en cours (un rechargement ne la perd pas).
  * Sprint 4 (US9) : photo après, puis relecture avant / après côte à côte.
+ * Sprint 4 (US10) : publication (photos + GZD.store) et feed des ramassages.
  *
  * Pas de framework ni de build. Les scripts partagés avec le site sont chargés
  * avant ce fichier et exposent GZD.store (données), GZD.photos (réduction des
@@ -138,6 +139,7 @@
       $('tab-' + autre).tabIndex = actif ? 0 : -1;
     });
 
+    if (nom === 'feed') { afficherFeed(); }
     if (nom === 'ramasser') { afficherRamasser(); }
     if (nom === 'moi') { afficherMoi(); }
     window.scrollTo(0, 0);
@@ -502,9 +504,119 @@
     $('bouton-publier').disabled = !(ramassage.photo_avant && ramassage.photo_apres);
   }
 
+  /**
+   * [S4][US10] Publier : les deux photos sont enregistrées (en local, la data
+   * URL sert d'adresse ; sur Supabase, elles partent dans le bucket), puis la
+   * publication est ajoutée et le ramassage en cours effacé.
+   */
   $('bouton-publier').addEventListener('click', function () {
-    afficherMessage('La publication arrive au prochain item.');
+    var bouton = this;
+    var ramassage = session.lireRamassage();
+    var pseudo = session.lirePseudo();
+    if (!ramassage || !ramassage.photo_avant || !ramassage.photo_apres) {
+      afficherMessage('Il manque une photo pour publier.', true);
+      return;
+    }
+    if (!pseudo) {
+      afficherEcranPseudo('ramasser');
+      return;
+    }
+
+    bouton.disabled = true;
+    afficherMessage('Publication en cours...');
+
+    Promise.all([
+      store.enregistrerPhoto(ramassage.photo_avant, photos.nomDeFichier('avant')),
+      store.enregistrerPhoto(ramassage.photo_apres, photos.nomDeFichier('apres'))
+    ]).then(function (urls) {
+      return store.ajouterPublication({
+        zone_id: ramassage.zone_id,
+        pseudo: pseudo,
+        photo_avant_url: urls[0],
+        photo_apres_url: urls[1],
+        publie_le: new Date().toISOString()
+      });
+    }).then(function (publication) {
+      session.effacerRamassage();
+      etat.pretPourApres = false;
+      effacerMessage();
+      apresPublication(publication, ramassage.zone_id);
+    }).catch(function (erreur) {
+      bouton.disabled = false;
+      afficherMessage('La publication a échoué : ' + (erreur.message || 'erreur inconnue') + '. Réessaie.', true);
+    });
   });
+
+  /** Ce qui se passe une fois la publication enregistrée. */
+  function apresPublication(publication, zoneId) {
+    ouvrirOnglet('feed');
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 8c. [S4][US10] Onglet Feed                                          */
+  /* ------------------------------------------------------------------ */
+
+  var elListeFeed = $('liste-feed');
+  var elFeedVide = $('feed-vide');
+  var elFeedEtat = $('feed-etat');
+
+  $('bouton-feed-ramasser').addEventListener('click', function () { ouvrirOnglet('ramasser'); });
+
+  /** Les publications, de la plus récente à la plus ancienne. */
+  function afficherFeed() {
+    elFeedEtat.textContent = 'Chargement...';
+    elFeedVide.hidden = true;
+
+    Promise.all([store.chargerPublications(), store.chargerZones()]).then(function (resultats) {
+      var publications = resultats[0].slice().sort(function (a, b) {
+        return (b.publie_le || '') < (a.publie_le || '') ? -1 : 1;
+      });
+      var zonesParId = {};
+      resultats[1].forEach(function (z) { zonesParId[z.id] = z; });
+
+      elFeedEtat.textContent = '';
+      vider(elListeFeed);
+      elFeedVide.hidden = publications.length > 0;
+      publications.forEach(function (publication) {
+        elListeFeed.appendChild(cartePublication(publication, zonesParId[publication.zone_id]));
+      });
+    }).catch(function (erreur) {
+      elFeedEtat.textContent = 'Impossible de charger le feed : ' + erreur.message;
+    });
+  }
+
+  /** Une publication : qui, où, quand, les deux photos, le lien vers la carte. */
+  function cartePublication(publication, zone) {
+    var nom = zone ? zone.nom : 'une zone';
+    var commune = zone && zone.commune ? ' (' + zone.commune + ')' : '';
+    return creer('article', { 'class': 'carte publication' }, [
+      creer('p', { 'class': 'en-tete' }, [
+        creer('span', { 'class': 'pseudo-auteur', texte: publication.pseudo || 'Quelqu\'un' }),
+        ' a nettoyé ' + nom + commune
+      ]),
+      creer('time', { 'class': 'date', datetime: publication.publie_le || '', texte: formaterDate(publication.publie_le) }),
+      creer('div', { 'class': 'avant-apres' }, [
+        creer('figure', { 'class': 'apercu' }, [
+          creer('img', { src: publication.photo_avant_url || '', alt: 'Avant le ramassage', loading: 'lazy' }),
+          creer('figcaption', { texte: 'Avant' })
+        ]),
+        creer('figure', { 'class': 'apercu' }, [
+          creer('img', { src: publication.photo_apres_url || '', alt: 'Après le ramassage', loading: 'lazy' }),
+          creer('figcaption', { texte: 'Après' })
+        ])
+      ]),
+      creer('a', { 'class': 'lien', href: lienCarte(publication.zone_id), texte: 'Voir sur la carte' })
+    ]);
+  }
+
+  /** Une date courte en français : « 17 nov. 2026, 14:05 ». */
+  function formaterDate(iso) {
+    var d = iso ? new Date(iso) : null;
+    if (!d || isNaN(d.getTime())) { return ''; }
+    var mois = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+    var deux = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear() + ', ' + deux(d.getHours()) + ':' + deux(d.getMinutes());
+  }
 
   /* ------------------------------------------------------------------ */
   /* 9. [S4][US7] Les photos                                             */

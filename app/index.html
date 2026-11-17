@@ -41,10 +41,15 @@
         </form>
       </section>
 
-      <!-- Onglet Feed : les ramassages publiés (arrive avec US10) -->
+      <!-- [S4][US10] Onglet Feed : les ramassages publiés, du plus récent au plus ancien -->
       <section id="onglet-feed" class="ecran" role="tabpanel" aria-labelledby="tab-feed" tabindex="-1" hidden>
         <h2>Feed</h2>
-        <p class="a-venir">Le feed des avant / après arrive au prochain item.</p>
+        <p class="aide" id="feed-etat" aria-live="polite"></p>
+        <div id="feed-vide" class="carte carte-vide" hidden>
+          <p>Personne n'a encore publié. Sois la première.</p>
+          <button type="button" id="bouton-feed-ramasser" class="bouton bouton-principal">Ramasser une zone</button>
+        </div>
+        <div id="liste-feed" aria-label="Ramassages publiés"></div>
       </section>
 
       <!-- Onglet Ramasser : choisir une zone, photos, publier (US5, US7, US9, US10) -->
