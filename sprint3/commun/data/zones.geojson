@@ -1,0 +1,306 @@
+{
+  "type": "FeatureCollection",
+  "name": "zones_demo_rade_de_brest",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.61576,
+          48.33947
+        ]
+      },
+      "properties": {
+        "id": "z01",
+        "nom": "Plage du Minou",
+        "commune": "Plouzané",
+        "etat": "rouge",
+        "type": "filets et cordages",
+        "quantite": "plusieurs sacs",
+        "signale_le": "2026-11-08T09:15:00+01:00",
+        "description": "Cordages et morceaux de filets échoués au pied de la dune après les coups de vent de la semaine."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.56791,
+          48.3517
+        ]
+      },
+      "properties": {
+        "id": "z02",
+        "nom": "Anse du Dellec",
+        "commune": "Plouzané",
+        "etat": "vert",
+        "type": "plastique",
+        "quantite": "un sac",
+        "signale_le": "2026-11-02T16:40:00+01:00",
+        "description": "Bouteilles et emballages dans les rochers sous le fort. Zone nettoyée le 9 novembre."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.55377,
+          48.36163
+        ]
+      },
+      "properties": {
+        "id": "z03",
+        "nom": "Plage de Sainte-Anne du Portzic",
+        "commune": "Brest",
+        "etat": "rouge",
+        "type": "mégots",
+        "quantite": "poignée",
+        "signale_le": "2026-11-15T18:05:00+01:00",
+        "description": "Mégots concentrés autour des bancs et de l'escalier d'accès à la plage."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.48387,
+          48.38276
+        ]
+      },
+      "properties": {
+        "id": "z04",
+        "nom": "Quai de la Douane, port de commerce",
+        "commune": "Brest",
+        "etat": "orange",
+        "type": "verre",
+        "quantite": "un sac",
+        "signale_le": "2026-11-14T08:30:00+01:00",
+        "description": "Bouteilles cassées le long du quai après le week-end. Un ramassage est en cours."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.43216,
+          48.39205
+        ]
+      },
+      "properties": {
+        "id": "z05",
+        "nom": "Port de plaisance du Moulin Blanc",
+        "commune": "Brest",
+        "etat": "vert",
+        "type": "métal",
+        "quantite": "poignée",
+        "signale_le": "2026-11-03T12:20:00+01:00",
+        "description": "Canettes et capsules près de la cale de mise à l'eau. Nettoyée le 5 novembre."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.4335,
+          48.39522
+        ]
+      },
+      "properties": {
+        "id": "z06",
+        "nom": "Plage du Moulin Blanc",
+        "commune": "Brest",
+        "etat": "rouge",
+        "type": "plastique",
+        "quantite": "plusieurs sacs",
+        "signale_le": "2026-11-16T10:45:00+01:00",
+        "description": "Laisse de mer chargée de plastiques (bouchons, fragments, emballages) sur la partie ouest de la plage."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.38191,
+          48.39687
+        ]
+      },
+      "properties": {
+        "id": "z07",
+        "nom": "Cale du Passage",
+        "commune": "Le Relecq-Kerhuon",
+        "etat": "rouge",
+        "type": "autre",
+        "quantite": "encombrant",
+        "signale_le": "2026-11-11T14:10:00+01:00",
+        "description": "Un pneu et des morceaux de polystyrène coincés dans la vase à côté de la cale."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.38284,
+          48.40661
+        ]
+      },
+      "properties": {
+        "id": "z08",
+        "nom": "Anse de Kerhuon",
+        "commune": "Le Relecq-Kerhuon",
+        "etat": "rouge",
+        "type": "plastique",
+        "quantite": "plusieurs sacs",
+        "signale_le": "2026-11-09T11:00:00+01:00",
+        "description": "Déchets plastiques piégés dans la végétation de la vasière, visibles à marée basse."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.45917,
+          48.32696
+        ]
+      },
+      "properties": {
+        "id": "z09",
+        "nom": "Pointe de l'Armorique",
+        "commune": "Plougastel-Daoulas",
+        "etat": "rouge",
+        "type": "filets et cordages",
+        "quantite": "encombrant",
+        "signale_le": "2026-11-06T15:30:00+01:00",
+        "description": "Gros morceau de filet de pêche et bouts de cordage entre les rochers sous la pointe."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.44023,
+          48.34101
+        ]
+      },
+      "properties": {
+        "id": "z10",
+        "nom": "Grève du Caro",
+        "commune": "Plougastel-Daoulas",
+        "etat": "vert",
+        "type": "verre",
+        "quantite": "poignée",
+        "signale_le": "2026-11-01T10:00:00+01:00",
+        "description": "Quelques bouteilles sur la grève. Nettoyée le 4 novembre lors d'une sortie du dimanche."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.36964,
+          48.33718
+        ]
+      },
+      "properties": {
+        "id": "z11",
+        "nom": "Port du Tinduff",
+        "commune": "Plougastel-Daoulas",
+        "etat": "orange",
+        "type": "métal",
+        "quantite": "un sac",
+        "signale_le": "2026-11-13T17:20:00+01:00",
+        "description": "Ferraille et vieux câbles au bout du quai. Une bénévole a commencé le ramassage."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.41393,
+          48.33737
+        ]
+      },
+      "properties": {
+        "id": "z12",
+        "nom": "Port de Lauberlac'h",
+        "commune": "Plougastel-Daoulas",
+        "etat": "rouge",
+        "type": "autre",
+        "quantite": "un sac",
+        "signale_le": "2026-11-10T09:50:00+01:00",
+        "description": "Restes de pique-nique et sacs abandonnés près de la cale du port."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.53186,
+          48.34178
+        ]
+      },
+      "properties": {
+        "id": "z13",
+        "nom": "Pointe des Espagnols",
+        "commune": "Roscanvel",
+        "etat": "vert",
+        "type": "mégots",
+        "quantite": "poignée",
+        "signale_le": "2026-11-04T13:15:00+01:00",
+        "description": "Mégots au point de vue, autour du parking. Nettoyée le 7 novembre."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.54649,
+          48.31415
+        ]
+      },
+      "properties": {
+        "id": "z14",
+        "nom": "Port de Roscanvel",
+        "commune": "Roscanvel",
+        "etat": "rouge",
+        "type": "plastique",
+        "quantite": "un sac",
+        "signale_le": "2026-11-12T16:00:00+01:00",
+        "description": "Bidons et bouts de plastique échoués sur la grève à côté du port."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.50777,
+          48.28543
+        ]
+      },
+      "properties": {
+        "id": "z15",
+        "nom": "Grève du Fret",
+        "commune": "Crozon",
+        "etat": "rouge",
+        "type": "filets et cordages",
+        "quantite": "plusieurs sacs",
+        "signale_le": "2026-11-07T08:40:00+01:00",
+        "description": "Filets, cordages et flotteurs déposés par la marée sur la grève à l'ouest du port."
+      }
+    }
+  ]
+}
