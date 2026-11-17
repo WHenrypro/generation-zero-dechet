@@ -14,6 +14,8 @@
  *                     (distance à vol d'oiseau depuis la position de la personne).
  * Sprint 3 (US4)    : fiche complète : photo du signalement, distance, et pour
  *                     une zone nettoyée l'avant / après publié depuis l'app.
+ * Sprint 3 (US5)    : « J'y vais avec l'app » ouvre ../app/?zone=<id> ; et si le
+ *                     site est ouvert avec ?zone=<id>, la fiche s'ouvre toute seule.
  *
  * Pas de framework ni d'étape de build : du JavaScript classique chargé par
  * des balises <script> dans index.html. Leaflet (variable globale « L ») et
@@ -92,6 +94,7 @@
       zones = liste;
       zones.forEach(ajouterMarqueur);
       mettreAJourCompteur();
+      ouvrirZoneDepuisUrl(); // [S3][US5] lien profond ?zone=<id>
     })
     .catch(function (erreur) {
       console.error('Chargement des zones impossible :', erreur);
@@ -210,8 +213,54 @@
     afficherDistanceFiche(zone);
     afficherPublicationFiche(zone);
 
+    // [S3][US5] Le bouton qui emmène dans l'app, sur cette zone.
+    afficherBoutonJyVais(zone);
+
     ouvrirPanneau(elFiche);
     recentrerSur(L.latLng(zone.lat, zone.lon));
+  }
+
+  /**
+   * « J'y vais avec l'app » : un lien vers ../app/?zone=<id>, l'app s'ouvre
+   * directement sur la zone. Une zone déjà nettoyée n'a pas besoin de ramassage :
+   * le lien est caché et une phrase le dit.
+   */
+  function afficherBoutonJyVais(zone) {
+    var lien = $('bouton-jy-vais');
+    var nettoyee = zone.etat === 'vert';
+    lien.href = '../app/?zone=' + encodeURIComponent(zone.id);
+    lien.hidden = nettoyee;
+    $('jy-vais-aide').hidden = nettoyee;
+    $('jy-vais-nettoyee').hidden = !nettoyee;
+  }
+
+  /**
+   * Lien profond : si le site est ouvert avec ?zone=<id> (depuis l'app, un
+   * message, un QR code), on centre la carte et on ouvre la fiche de cette zone.
+   * Identifiant inconnu : un message discret, et la carte reste normale.
+   */
+  function ouvrirZoneDepuisUrl() {
+    var id = lireParametreUrl('zone');
+    if (!id) { return; }
+    var zone = zones.filter(function (z) { return z.id === id; })[0];
+    if (!zone) {
+      afficherMessage('Zone introuvable : le lien pointe vers une zone qui n\'existe pas ou plus.');
+      return;
+    }
+    recentrerSur(L.latLng(zone.lat, zone.lon), ZOOM_AUTOUR_DE_MOI);
+    ouvrirFiche(zone);
+  }
+
+  /** La valeur d'un paramètre de l'adresse (?zone=z01&x=y), ou null. */
+  function lireParametreUrl(nom) {
+    var morceaux = window.location.search.replace(/^\?/, '').split('&');
+    for (var i = 0; i < morceaux.length; i++) {
+      var paire = morceaux[i].split('=');
+      if (decodeURIComponent(paire[0]) === nom) {
+        return decodeURIComponent((paire[1] || '').replace(/\+/g, ' ')) || null;
+      }
+    }
+    return null;
   }
 
   /** La photo du signalement si elle existe, sinon le visuel de remplacement (SVG). */
