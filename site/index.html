@@ -38,6 +38,16 @@
       </button>
     </div>
 
+    <!-- Confirmation courte (ex. : « zone signalée »), disparaît toute seule -->
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <!-- [S2][US21] Signaler une zone : bouton flottant et bandeau du mode « placer sur la carte » -->
+    <button type="button" class="fab" id="bouton-signaler">+ Signaler une zone</button>
+    <div class="bandeau-placement" id="bandeau-placement" hidden>
+      <span>Touchez la carte à l'endroit de la zone sale.</span>
+      <button type="button" class="lien-discret" id="annuler-placement">Annuler</button>
+    </div>
+
     <!-- Légende des couleurs -->
     <aside class="legende" aria-label="Légende">
       <ul>
@@ -87,6 +97,69 @@
       </button>
       <p class="aide">Fonction prévue au sprint 3 : choisir la zone et s'y rendre.</p>
     </section>
+
+    <!-- [S2][US21] Formulaire de signalement (Marc voit une zone sale) -->
+    <section id="panneau-signaler" class="panneau" aria-labelledby="signaler-titre" hidden>
+      <button type="button" class="panneau-fermer" aria-label="Fermer le formulaire">&times;</button>
+      <form id="form-signaler" novalidate>
+        <h2 id="signaler-titre">Signaler une zone sale</h2>
+        <p class="aide aide-gauche">Trente secondes suffisent : où, quoi, combien. La photo aide celles et ceux qui viendront nettoyer.</p>
+
+        <fieldset class="champ">
+          <legend>Où ?</legend>
+          <div class="ligne-boutons">
+            <button type="button" class="bouton-secondaire" id="signaler-gps">Ma position GPS</button>
+            <button type="button" class="bouton-secondaire" id="signaler-placer">Placer sur la carte</button>
+          </div>
+          <p class="aide aide-gauche" id="signaler-position">Position non définie.</p>
+        </fieldset>
+
+        <label class="champ">
+          <span>Photo <small>(facultative)</small></span>
+          <input type="file" id="signaler-photo" accept="image/*" capture="environment">
+        </label>
+        <img id="signaler-apercu" class="apercu" alt="Aperçu de la photo" hidden>
+
+        <label class="champ">
+          <span>Type de déchet</span>
+          <select id="signaler-type">
+            <option value="plastique">Plastique</option>
+            <option value="verre">Verre</option>
+            <option value="métal">Métal</option>
+            <option value="filets et cordages">Filets et cordages</option>
+            <option value="mégots">Mégots</option>
+            <option value="autre">Autre</option>
+          </select>
+        </label>
+
+        <label class="champ">
+          <span>Quantité</span>
+          <select id="signaler-quantite">
+            <option value="poignée">Une poignée</option>
+            <option value="un sac" selected>Un sac</option>
+            <option value="plusieurs sacs">Plusieurs sacs</option>
+            <option value="encombrant">Encombrant</option>
+          </select>
+        </label>
+
+        <label class="champ">
+          <span>Nom du lieu <small>(facultatif)</small></span>
+          <input type="text" id="signaler-nom" maxlength="80" placeholder="ex. : Plage du Moulin Blanc, côté digue">
+        </label>
+        <label class="champ">
+          <span>Commune <small>(facultatif)</small></span>
+          <input type="text" id="signaler-commune" maxlength="60" placeholder="ex. : Brest">
+        </label>
+        <label class="champ">
+          <span>Précisions <small>(facultatif)</small></span>
+          <textarea id="signaler-description" rows="2" maxlength="300" placeholder="ex. : au pied de la cale, visible à marée basse"></textarea>
+        </label>
+
+        <p class="erreur" id="signaler-erreur" role="alert" hidden></p>
+        <button type="submit" class="bouton-principal" id="signaler-envoyer">Signaler cette zone</button>
+        <button type="button" class="lien-discret lien-centre" id="signaler-annuler">Annuler le signalement</button>
+      </form>
+    </section>
   </main>
 
   <noscript><p class="noscript">Cette application a besoin de JavaScript pour afficher la carte.</p></noscript>
@@ -99,6 +172,8 @@
        commun/js/config.js et remplir les clés. -->
   <script src="../commun/js/config.js"></script>
   <script src="../commun/js/store.js"></script>
+  <script src="../commun/js/photos.js"></script>
+  <script src="../commun/js/session.js"></script>
   <script src="js/site.js"></script>
 </body>
 </html>
