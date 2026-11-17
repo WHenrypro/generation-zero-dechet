@@ -31,6 +31,13 @@
     <!-- Message d'erreur (ex. : données non chargées). Caché par défaut. -->
     <div id="message" class="message" role="alert" hidden></div>
 
+    <!-- [S2][US2] Outils de la carte : se recentrer autour de soi -->
+    <div class="outils-carte">
+      <button type="button" class="bouton-carte" id="bouton-position" title="Recentrer la carte autour de ma position">
+        Autour de moi
+      </button>
+    </div>
+
     <!-- Légende des couleurs -->
     <aside class="legende" aria-label="Légende">
       <ul>
@@ -41,12 +48,12 @@
     </aside>
 
     <!-- Fiche d'une zone : s'ouvre quand on touche un rond sur la carte.
-         Sur mobile elle remonte depuis le bas, sur grand écran elle se place à droite. -->
-    <section id="fiche" class="fiche" aria-labelledby="fiche-nom" tabindex="-1" hidden>
-      <button type="button" class="fiche-fermer" id="fiche-fermer" aria-label="Fermer la fiche">&times;</button>
+         Sur mobile elle remonte depuis le bas, sur grand écran elle se place à gauche. -->
+    <section id="fiche" class="panneau fiche" aria-labelledby="fiche-nom" tabindex="-1" hidden>
+      <button type="button" class="panneau-fermer" aria-label="Fermer la fiche">&times;</button>
 
       <!-- Photo : pour l'instant une image de remplacement dessinée en SVG.
-           La vraie photo du signalement viendra de Supabase Storage. -->
+           La vraie photo du signalement viendra avec US21 / US4. -->
       <div class="fiche-photo">
         <svg viewBox="0 0 320 180" role="img" aria-label="Photo non disponible pour l'instant" xmlns="http://www.w3.org/2000/svg">
           <rect width="320" height="180" fill="#DBEEFB"/>
@@ -86,9 +93,11 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <!-- Sprint 2 : décommenter la ligne suivante une fois js/config.js créé
-       à partir de js/config.example.js (clés Supabase). -->
-  <!-- <script src="js/config.js"></script> -->
+  <!-- js/config.js n'existe pas par défaut (il est ignoré par git) : le navigateur
+       note une 404 dans la console et l'appli tourne en mode local. Pour passer
+       sur Supabase, copier js/config.example.js en js/config.js et remplir les clés. -->
+  <script src="js/config.js"></script>
+  <script src="js/store.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
