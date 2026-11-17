@@ -34,3 +34,18 @@ Internet nécessaire pour Leaflet et le fond de carte OpenStreetMap. Aucun compt
 
 ## Git
 Chaque sprint correspond à un incrément. Pour montrer une vraie progression, faites des commits/PRs au fil de la réalisation. Les dossiers séparés sont des snapshots pédagogiques ; ils ne prouvent pas à eux seuls que les sprints ont été développés dans cet ordre.
+
+## L'app du ramassage (Génération Z, concept BeReal)
+
+À côté du site, une app pensée pour le téléphone : Léa choisit une zone rouge près d'elle, prend une photo avant, une photo après, publie, et la zone passe au vert. Le code vit dans `sprintN/app/` avec un dossier `sprintN/commun/` partagé (données de démo, couche de données, logo). Ouvrir `sprint4/app/index.html` avec Live Server (ou un serveur HTTP local). Aucun compte ni clé nécessaires : les données restent dans le navigateur.
+
+| Sprint | Ce que l'app fait | Dossier |
+|---|---|---|
+| 1 | Pas d'app. Décision T4 (réaliser une application associée au site) prise en revue. | `sprint1/APP.md` |
+| 2 | Préparation : site + app sur les mêmes données, couche commune, charte. | `sprint2/APP.md` |
+| 3 | US1 pseudo, US5 zones rouges proches et « J'y vais » depuis le site (`?zone=ID`). | `sprint3/app/` |
+| 4 | US7 photo avant, US9 photo après, US10 publier et feed (avec une publication exemple), US11 la zone passe au vert, logo et slogan officiels. | `sprint4/app/` |
+
+Dans l'app, « Voir sur la carte » renvoie vers le site du même sprint (`sprintN/index.html`). L'onglet Moi contient un bouton « Réinitialiser la démo » pour rejouer le parcours.
+
+L'historique complet de l'app (une branche par story, fusions, un tag par sprint : `sprint-1` à `sprint-4`) est sur la branche `mvp` de ce dépôt.

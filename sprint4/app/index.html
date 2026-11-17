@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Génération Z(éro déchet) · l'app du ramassage</title>
+  <meta name="description" content="L'app du ramassage : choisis une zone rouge près de toi, photo avant, photo après, publie. La zone passe au vert sur la carte.">
+  <meta name="theme-color" content="#123c39">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div class="app">
+
+    <header class="entete">
+      <img class="logo" src="../commun/img/logo.svg" alt="" width="44" height="44">
+      <h1>Génération Z <span class="eco">(éro déchet)</span> <span class="sous-titre">l'app du ramassage</span></h1>
+    </header>
+
+    <!-- Messages courts (erreurs, confirmations). Toujours présent pour que
+         les lecteurs d'écran annoncent le texte quand il change. -->
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+
+    <main class="contenu">
+
+      <!-- [S3][US1] Écran pseudo : affiché tant qu'aucun pseudo n'est enregistré,
+           ou quand on veut en changer. Rien d'autre n'est demandé. -->
+      <section id="ecran-pseudo" class="ecran ecran-pseudo" aria-labelledby="titre-pseudo" hidden>
+        <img class="logo-grand" src="../commun/img/logo.svg" alt="" width="96" height="96">
+        <p class="slogan">« Pas de planète B, mais une génération Z. »</p>
+        <h2 id="titre-pseudo">Choisis ton pseudo</h2>
+        <p class="aide">Pas de compte, pas de mot de passe. Juste un pseudo pour signer tes ramassages.</p>
+        <form id="formulaire-pseudo" novalidate>
+          <label for="champ-pseudo">Ton pseudo</label>
+          <input id="champ-pseudo" class="champ" type="text" maxlength="24" autocomplete="nickname"
+                 autocapitalize="off" spellcheck="false" placeholder="Ex. : lea_brest" required>
+          <p class="aide aide-petite"><span id="pseudo-restant">24</span> caractères max. Il reste dans ce navigateur.</p>
+          <button type="submit" class="bouton bouton-principal">C'est parti</button>
+          <button type="button" id="bouton-annuler-pseudo" class="bouton bouton-lien" hidden>Annuler</button>
+        </form>
+      </section>
+
+      <!-- [S4][US10] Onglet Feed : les ramassages publiés, du plus récent au plus ancien -->
+      <section id="onglet-feed" class="ecran" role="tabpanel" aria-labelledby="tab-feed" tabindex="-1" hidden>
+        <h2>Feed</h2>
+        <p class="aide" id="feed-etat" aria-live="polite"></p>
+        <div id="feed-vide" class="carte carte-vide" hidden>
+          <p>Personne n'a encore publié. Sois la première.</p>
+          <button type="button" id="bouton-feed-ramasser" class="bouton bouton-principal">Ramasser une zone</button>
+        </div>
+        <div id="liste-feed" aria-label="Ramassages publiés"></div>
+      </section>
+
+      <!-- Onglet Ramasser : choisir une zone, photos, publier (US5, US7, US9, US10) -->
+      <section id="onglet-ramasser" class="ecran" role="tabpanel" aria-labelledby="tab-ramasser" tabindex="-1" hidden>
+
+        <!-- [S3][US5] Vue 1 : aucun ramassage en cours, on choisit une zone rouge -->
+        <div id="vue-zones" hidden>
+          <h2>Ramasser</h2>
+          <p class="aide" id="zones-position" aria-live="polite"></p>
+
+          <!-- Zone arrivée par le lien « J'y vais » de la carte (../app/?zone=id) -->
+          <div id="zone-choisie" hidden>
+            <p class="etiquette">Zone choisie depuis la carte</p>
+            <div id="zone-choisie-carte"></div>
+          </div>
+
+          <p class="etiquette" id="liste-zones-titre">Zones rouges, de la plus proche à la plus loin</p>
+          <div id="liste-zones" aria-labelledby="liste-zones-titre"></div>
+        </div>
+
+        <!-- [S3][US5] Vue 2 : un ramassage est en cours -->
+        <div id="vue-en-cours" hidden>
+          <h2>Ramassage en cours</h2>
+          <div class="carte carte-zone-en-cours">
+            <p class="etiquette">Zone</p>
+            <p class="nom-zone" id="en-cours-nom"></p>
+            <p class="aide aide-zone" id="en-cours-commune"></p>
+            <a class="lien" id="en-cours-lien-carte" href="../index.html">Voir sur la carte</a>
+          </div>
+
+          <ol class="etapes" aria-label="Les étapes du ramassage">
+            <!-- [S4][US7] Étape 1 : la photo avant. L'input file avec capture
+                 ouvre directement l'appareil photo sur un téléphone. -->
+            <li class="etape" id="etape-1" data-etat="courante">
+              <span class="numero" aria-hidden="true">1</span>
+              <div class="etape-corps">
+                <h3>Photo avant</h3>
+                <div id="avant-prise">
+                  <p class="aide">Montre la zone telle que tu la trouves. Sans filtre, sans mise en scène.</p>
+                  <label class="bouton bouton-principal bouton-photo" for="fichier-avant">
+                    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                    <span>Photo avant</span>
+                    <input type="file" id="fichier-avant" class="visuellement-cache" accept="image/*" capture="environment">
+                  </label>
+                </div>
+                <figure class="apercu" id="avant-apercu" hidden>
+                  <img id="avant-image" alt="Ta photo avant le ramassage">
+                  <figcaption>Avant</figcaption>
+                </figure>
+                <label class="bouton bouton-lien seulement-courante" id="avant-reprendre" for="fichier-avant" hidden>Reprendre la photo avant</label>
+              </div>
+            </li>
+            <!-- [S4][US7] Étape 2 : le ramassage lui-même -->
+            <li class="etape" id="etape-2" data-etat="a-venir">
+              <span class="numero" aria-hidden="true">2</span>
+              <div class="etape-corps">
+                <h3>Ramasser</h3>
+                <p class="aide">Ramasse, on t'attend.</p>
+                <button type="button" id="bouton-fini" class="bouton bouton-principal seulement-courante">J'ai fini, photo après</button>
+              </div>
+            </li>
+            <!-- [S4][US9] Étape 3 : la photo après, même mécanique que l'avant -->
+            <li class="etape" id="etape-3" data-etat="a-venir">
+              <span class="numero" aria-hidden="true">3</span>
+              <div class="etape-corps">
+                <h3>Photo après</h3>
+                <div class="seulement-courante">
+                  <p class="aide">Même endroit, même cadrage : montre le résultat.</p>
+                  <label class="bouton bouton-principal bouton-photo" for="fichier-apres">
+                    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                    <span>Photo après</span>
+                    <input type="file" id="fichier-apres" class="visuellement-cache" accept="image/*" capture="environment">
+                  </label>
+                </div>
+              </div>
+            </li>
+            <li class="etape" id="etape-4" data-etat="a-venir">
+              <span class="numero" aria-hidden="true">4</span>
+              <div class="etape-corps">
+                <h3>Publier</h3>
+              </div>
+            </li>
+          </ol>
+
+          <button type="button" id="bouton-abandonner" class="bouton bouton-lien">Abandonner ce ramassage</button>
+        </div>
+
+        <!-- [S4][US9] Vue 3 : relecture avant / après avant de publier -->
+        <div id="vue-relecture" hidden>
+          <h2>Avant / après</h2>
+          <p class="aide">Relis tes deux photos. Si c'est bon, publie : ton ramassage apparaîtra dans le feed.</p>
+          <div class="carte">
+            <p class="nom-zone" id="relecture-nom"></p>
+            <p class="aide aide-zone" id="relecture-commune"></p>
+            <div class="avant-apres">
+              <figure class="apercu">
+                <img id="relecture-avant" alt="Photo avant le ramassage">
+                <figcaption>Avant</figcaption>
+              </figure>
+              <figure class="apercu">
+                <img id="relecture-apres" alt="Photo après le ramassage">
+                <figcaption>Après</figcaption>
+              </figure>
+            </div>
+            <div class="actions">
+              <button type="button" id="bouton-publier" class="bouton bouton-principal" disabled>Publier</button>
+              <label class="bouton bouton-fantome" for="fichier-apres-reprise">
+                Reprendre l'après
+                <input type="file" id="fichier-apres-reprise" class="visuellement-cache" accept="image/*" capture="environment">
+              </label>
+            </div>
+          </div>
+          <button type="button" id="bouton-abandonner-relecture" class="bouton bouton-lien">Abandonner ce ramassage</button>
+        </div>
+
+        <!-- [S4][US11] Vue 4 : la zone est passée au vert -->
+        <div id="vue-bravo" hidden>
+          <div class="carte carte-bravo" role="status">
+            <span class="badge badge-vert">Nettoyée</span>
+            <h2 id="bravo-titre">Bravo <span id="bravo-pseudo"></span>, <span id="bravo-zone"></span> est passée au vert</h2>
+            <p class="aide">Ton avant / après est dans le feed et la carte est à jour. Merci pour la rade.</p>
+            <div class="actions">
+              <button type="button" id="bouton-voir-feed" class="bouton bouton-principal">Voir le feed</button>
+              <a class="bouton bouton-fantome" id="bravo-lien-carte" href="../index.html">Voir sur la carte</a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- [S3][US1] Onglet Moi : le pseudo et deux ou trois réglages -->
+      <section id="onglet-moi" class="ecran" role="tabpanel" aria-labelledby="tab-moi" tabindex="-1" hidden>
+        <h2>Moi</h2>
+
+        <div class="carte carte-profil">
+          <p class="etiquette">Ton pseudo</p>
+          <p class="pseudo" id="moi-pseudo"></p>
+          <div class="actions">
+            <button type="button" id="bouton-changer-pseudo" class="bouton bouton-secondaire">Changer de pseudo</button>
+            <button type="button" id="bouton-deconnexion" class="bouton bouton-secondaire">Se déconnecter</button>
+          </div>
+        </div>
+
+        <a class="bouton bouton-secondaire bouton-large" href="../index.html">Voir la carte</a>
+
+        <p class="aide" id="moi-mode"></p>
+        <p class="aide aide-petite">Les photos restent dans le navigateur en démo locale : son stockage est limité à quelques Mo, donc à quelques ramassages.</p>
+
+        <!-- [S4][US11] Réinitialiser la démo (seulement en mode local) -->
+        <div class="carte carte-demo" id="carte-demo" hidden>
+          <p class="etiquette">Démo</p>
+          <p class="aide">Remet les 15 zones de départ et vide le feed. Ton pseudo est gardé.</p>
+          <button type="button" id="bouton-reinitialiser" class="bouton bouton-fantome bouton-large">Réinitialiser la démo</button>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="pied">Prototype pédagogique · ISEN Brest · Données locales au navigateur · Les zones affichées sont fictives.</footer>
+
+    <!-- Barre du bas : les trois onglets -->
+    <nav class="navigation" role="tablist" aria-label="Sections de l'app">
+      <button type="button" class="onglet" role="tab" id="tab-feed" aria-controls="onglet-feed" aria-selected="false" data-onglet="feed">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+        <span>Feed</span>
+      </button>
+      <button type="button" class="onglet" role="tab" id="tab-ramasser" aria-controls="onglet-ramasser" aria-selected="false" data-onglet="ramasser">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v10"/><path d="M7 8l5-5 5 5"/><path d="M4 13h16l-1.5 8h-13z"/></svg>
+        <span>Ramasser</span>
+      </button>
+      <button type="button" class="onglet" role="tab" id="tab-moi" aria-controls="onglet-moi" aria-selected="false" data-onglet="moi">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span>Moi</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <noscript><p class="noscript">Cette application a besoin de JavaScript.</p></noscript>
+
+  <!-- commun/js/config.js n'existe pas par défaut (il est ignoré par git) : le
+       navigateur note une 404 dans la console et l'app tourne en mode local.
+       Pour passer sur Supabase, copier commun/js/config.example.js en
+       commun/js/config.js et remplir les clés. -->
+  <script src="../commun/js/config.js"></script>
+  <script src="../commun/js/store.js"></script>
+  <script src="../commun/js/photos.js"></script>
+  <script src="../commun/js/session.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
