@@ -23,7 +23,7 @@ Règle prévue (étape 6) : sprint volontairement plus léger, garder 20 min pou
 | US9 – Prendre la photo après | 2 | `s4/us9-photo-apres` | terminé | `3e475af`, fusion `ff40191` |
 | US10 – Publier l'avant/après | 3 | `s4/us10-publier` | terminé | `e8c3213`, fusion `60a31d7` |
 | US11 – La zone passe au vert | 1 | `s4/us11-zone-verte` | terminé | `4f38c63`, fusion `e2c2fba` |
-| Exemple de publication dans le feed (démo) | 0 | `s4/us10-feed-demo` | terminé | `2952a82`, fusion `FUSION` |
+| Exemple de publication dans le feed (démo) | 0 | `s4/us10-feed-demo` | terminé | `2952a82`, fusion `6c0e29b` |
 
 États possibles : à faire, en cours, terminé (testé, montrable, fusionné sur main).
 
