@@ -7,7 +7,9 @@
  * Deux modes, choisis automatiquement au chargement :
  *   - « local »    : pas de commun/js/config.js (ou clés vides). Les données vivent
  *                    dans le localStorage du navigateur, initialisées depuis
- *                    commun/data/zones.geojson. C'est le mode de la démo du TP : ça
+ *                    commun/data/zones.geojson (zones) et
+ *                    commun/data/publications-demo.json (une publication
+ *                    exemple pour que le feed ne soit pas vide en démo). C'est le mode de la démo du TP : ça
  *                    marche sans compte ni serveur, chaque navigateur a sa copie.
  *   - « supabase » : commun/js/config.js renseigne SUPABASE_URL et SUPABASE_ANON_KEY.
  *                    On parle à l'API REST de Supabase (PostgREST pour les
@@ -29,6 +31,7 @@
   window.GZD = window.GZD || {};
 
   var URL_GEOJSON = '../commun/data/zones.geojson'; // vu depuis site/ ou app/
+  var URL_PUBLICATIONS_DEMO = '../commun/data/publications-demo.json';
   var CLE_ZONES = 'gzd.zones';
   var CLE_PUBLICATIONS = 'gzd.publications';
   var BUCKET_PHOTOS = 'photos';
@@ -151,8 +154,27 @@
       });
     },
 
+    /**
+     * [S4][US10] Au premier lancement (clé absente, pas tableau vide), le feed
+     * reçoit la publication exemple de publications-demo.json. Comme
+     * reinitialiser() supprime la clé, l'exemple revient après une
+     * réinitialisation de la démo : c'est voulu, la démo ne commence jamais
+     * sur un feed vide.
+     */
     chargerPublications: function () {
-      return Promise.resolve(lireLocal(CLE_PUBLICATIONS) || []);
+      var publications = lireLocal(CLE_PUBLICATIONS);
+      if (publications) { return Promise.resolve(publications); }
+      return fetch(URL_PUBLICATIONS_DEMO)
+        .then(verifierReponse)
+        .then(function (liste) {
+          liste = Array.isArray(liste) ? liste : [];
+          try { ecrireLocal(CLE_PUBLICATIONS, liste); } catch (erreur) { console.warn(erreur.message); }
+          return liste;
+        })
+        .catch(function (erreur) {
+          console.warn('Publication exemple indisponible :', erreur.message);
+          return [];
+        });
     },
 
     ajouterPublication: function (publication) {
@@ -173,7 +195,7 @@
       return Promise.resolve(dataUrl);
     },
 
-    /** Efface les données du navigateur et recharge les 15 zones de démo. */
+    /** Efface les données du navigateur et recharge les 15 zones de démo (et la publication exemple au prochain affichage du feed). */
     reinitialiser: function () {
       try {
         localStorage.removeItem(CLE_ZONES);

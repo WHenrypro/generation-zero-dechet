@@ -25,7 +25,9 @@ Sans `commun/js/config.js`, l'app tourne en démo locale : les données restent 
 5. Relecture avant / après côte à côte. « Reprendre l'après » si besoin, puis « Publier ».
 6. Écran « Bravo » : la zone est passée au vert. « Voir sur la carte » ouvre le site sur cette zone, « Voir le feed » montre la publication en tête du feed.
 
-Pour rejouer la démo : onglet Moi, « Réinitialiser la démo » (zones de départ, feed vidé, pseudo gardé).
+Au premier lancement, le feed contient déjà une publication exemple (Léa, Anse du Dellec) pour ne pas commencer sur un écran vide.
+
+Pour rejouer la démo : onglet Moi, « Réinitialiser la démo » (zones de départ, feed ramené à la publication exemple, pseudo gardé).
 
 ## Limites connues
 

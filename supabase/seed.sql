@@ -26,3 +26,18 @@ values
   ('z14', 'Port de Roscanvel', 'Roscanvel', 'rouge', 'plastique', 'un sac', 48.31415, -4.54649, 'Bidons et bouts de plastique échoués sur la grève à côté du port.', '2026-11-12T16:00:00+01:00'),
   ('z15', 'Grève du Fret', 'Crozon', 'rouge', 'filets et cordages', 'plusieurs sacs', 48.28543, -4.50777, 'Filets, cordages et flotteurs déposés par la marée sur la grève à l''ouest du port.', '2026-11-07T08:40:00+01:00')
 on conflict (code) do nothing;
+
+
+-- ---------------------------------------------------------------------------
+-- [S4][US10] Publication exemple pour le feed (même contenu qu'en mode local,
+-- commun/data/publications-demo.json). Les photos restent vides ici : en
+-- mode Supabase elles vivent dans le bucket Storage, pas en data URL.
+-- Relançable : pas de doublon si une publication de « Léa » existe déjà sur z02.
+-- ---------------------------------------------------------------------------
+insert into public.publications (zone_id, pseudo, photo_avant_url, photo_apres_url, publie_le)
+select z.id, 'Léa', null, null, '2026-11-17T09:30:00+01:00'
+from public.zones z
+where z.code = 'z02'
+  and not exists (
+    select 1 from public.publications p where p.zone_id = z.id and p.pseudo = 'Léa'
+  );
