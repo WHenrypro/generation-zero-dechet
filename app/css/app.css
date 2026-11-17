@@ -1,0 +1,340 @@
+/*
+ * Géné Z(éro) Déchet, l'app : feuille de style
+ * Thème sombre façon BeReal, mobile d'abord. Sur ordinateur, l'app reste
+ * dans une colonne de 480 px centrée, comme un téléphone posé sur l'écran.
+ */
+
+:root {
+  --fond: #0B0F14;
+  --fond-carte: #141B24;
+  --fond-carte-2: #1A2330;
+  --bord: #243040;
+  --texte: #F1F5F9;
+  --texte-doux: #A6B2C1;
+  --texte-sombre: #0B0F14;
+  --vert: #2E9E5B;
+  --vert-clair: #8FE07A;
+  --rouge: #D64545;
+  --orange: #F28C28;
+  --rayon: 18px;
+  --rayon-petit: 12px;
+  --ombre: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --hauteur-nav: 64px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* L'attribut hidden doit gagner sur toutes les classes (.bouton, .ecran...). */
+[hidden] {
+  display: none !important;
+}
+
+html {
+  background: var(--fond);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--texte);
+  background: var(--fond);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Colonne de l'app ---------- */
+
+.app {
+  position: relative;
+  max-width: 480px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 520px) {
+  .app {
+    border-left: 1px solid var(--bord);
+    border-right: 1px solid var(--bord);
+  }
+}
+
+.entete {
+  padding: 16px 16px 8px;
+}
+
+.entete h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.entete .sous-titre {
+  margin-left: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vert-clair);
+}
+
+.contenu {
+  flex: 1;
+  padding: 8px 16px calc(var(--hauteur-nav) + 24px);
+}
+
+.ecran h2 {
+  margin: 8px 0 14px;
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+/* ---------- Textes ---------- */
+
+.aide {
+  margin: 0 0 14px;
+  color: var(--texte-doux);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.aide-petite {
+  font-size: 0.8rem;
+}
+
+.etiquette {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--texte-doux);
+}
+
+.a-venir {
+  margin: 0;
+  padding: 24px 16px;
+  border: 1px dashed var(--bord);
+  border-radius: var(--rayon);
+  color: var(--texte-doux);
+  text-align: center;
+}
+
+/* ---------- Messages (aria-live) ---------- */
+
+.message {
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  margin: 0 16px 8px;
+  padding: 10px 14px;
+  border-radius: var(--rayon-petit);
+  background: #1F2A37;
+  border-left: 4px solid var(--vert-clair);
+  color: var(--texte);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  box-shadow: var(--ombre);
+}
+
+.message:empty {
+  display: none;
+}
+
+.message.erreur {
+  border-left-color: var(--rouge);
+}
+
+/* ---------- Cartes ---------- */
+
+.carte {
+  margin: 0 0 14px;
+  padding: 16px;
+  border-radius: var(--rayon);
+  background: var(--fond-carte);
+  border: 1px solid var(--bord);
+}
+
+.carte-profil .pseudo {
+  margin: 0 0 14px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--vert-clair);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: grid;
+  gap: 10px;
+}
+
+/* ---------- Boutons et champs ---------- */
+
+.bouton {
+  display: block;
+  width: 100%;
+  padding: 15px 18px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.08s, background-color 0.15s;
+}
+
+.bouton:active {
+  transform: scale(0.98);
+}
+
+.bouton:focus-visible,
+.champ:focus-visible,
+.onglet:focus-visible {
+  outline: 3px solid var(--vert-clair);
+  outline-offset: 2px;
+}
+
+.bouton-principal {
+  background: var(--vert-clair);
+  color: var(--texte-sombre);
+}
+
+.bouton-principal:hover:not(:disabled) {
+  background: #A4EA92;
+}
+
+.bouton-principal:disabled {
+  background: #3A4656;
+  color: var(--texte-doux);
+  cursor: not-allowed;
+}
+
+.bouton-secondaire {
+  background: var(--fond-carte-2);
+  color: var(--texte);
+  border: 1px solid var(--bord);
+}
+
+.bouton-secondaire:hover {
+  background: #22303F;
+}
+
+.bouton-large {
+  margin: 4px 0 18px;
+}
+
+.bouton-lien {
+  margin-top: 6px;
+  padding: 10px;
+  background: transparent;
+  color: var(--texte-doux);
+  font-weight: 600;
+}
+
+.bouton-lien:hover {
+  color: var(--texte);
+}
+
+label {
+  display: block;
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.champ {
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon-petit);
+  background: var(--fond-carte);
+  color: var(--texte);
+  font: inherit;
+  font-size: 1.1rem;
+}
+
+.champ::placeholder {
+  color: #6B7A8C;
+}
+
+/* ---------- Écran pseudo ---------- */
+
+.ecran-pseudo {
+  padding-top: 32px;
+}
+
+.ecran-pseudo h2 {
+  font-size: 1.8rem;
+}
+
+.ecran-pseudo form {
+  margin-top: 20px;
+}
+
+.ecran-pseudo .bouton-principal {
+  margin-top: 12px;
+}
+
+/* ---------- Barre de navigation du bas ---------- */
+
+.navigation {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  max-width: 480px;
+  height: calc(var(--hauteur-nav) + env(safe-area-inset-bottom, 0px));
+  margin: 0 auto;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(11, 15, 20, 0.96);
+  border-top: 1px solid var(--bord);
+  backdrop-filter: blur(8px);
+}
+
+.onglet {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--texte-doux);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.onglet .icone {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.onglet[aria-selected="true"] {
+  color: var(--vert-clair);
+}
+
+.noscript {
+  max-width: 480px;
+  margin: 16px auto;
+  padding: 12px 16px;
+  background: #3B2A12;
+  color: #FFE3B3;
+  border-radius: var(--rayon-petit);
+}

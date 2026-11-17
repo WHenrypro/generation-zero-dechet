@@ -2,21 +2,101 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Géné Z(éro) Déchet · l'app</title>
+  <meta name="description" content="L'app du ramassage : choisis une zone rouge près de toi, photo avant, photo après, publie. La zone passe au vert sur la carte.">
   <meta name="theme-color" content="#0B0F14">
-  <style>
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #0B0F14; color: #F1F5F9; text-align: center; padding: 24px; }
-    h1 { margin: 0 0 8px; font-size: 1.6rem; }
-    p { margin: 0 0 16px; color: #A6B2C1; line-height: 1.5; max-width: 32ch; }
-    a { color: #8FE07A; font-weight: 700; }
-  </style>
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-  <div>
-    <h1>Géné Z(éro) Déchet</h1>
-    <p>L'app du ramassage (pseudo, photo avant, photo après, publication) arrive aux sprints 3 et 4.</p>
-    <p><a href="../site/">Voir la carte de la rade</a></p>
+  <div class="app">
+
+    <header class="entete">
+      <h1>Géné Z(éro) Déchet <span class="sous-titre">l'app</span></h1>
+    </header>
+
+    <!-- Messages courts (erreurs, confirmations). Toujours présent pour que
+         les lecteurs d'écran annoncent le texte quand il change. -->
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+
+    <main class="contenu">
+
+      <!-- [S3][US1] Écran pseudo : affiché tant qu'aucun pseudo n'est enregistré,
+           ou quand on veut en changer. Rien d'autre n'est demandé. -->
+      <section id="ecran-pseudo" class="ecran ecran-pseudo" aria-labelledby="titre-pseudo" hidden>
+        <h2 id="titre-pseudo">Choisis ton pseudo</h2>
+        <p class="aide">Pas de compte, pas de mot de passe. Juste un pseudo pour signer tes ramassages.</p>
+        <form id="formulaire-pseudo" novalidate>
+          <label for="champ-pseudo">Ton pseudo</label>
+          <input id="champ-pseudo" class="champ" type="text" maxlength="24" autocomplete="nickname"
+                 autocapitalize="off" spellcheck="false" placeholder="Ex. : lea_brest" required>
+          <p class="aide aide-petite"><span id="pseudo-restant">24</span> caractères max. Il reste dans ce navigateur.</p>
+          <button type="submit" class="bouton bouton-principal">C'est parti</button>
+          <button type="button" id="bouton-annuler-pseudo" class="bouton bouton-lien" hidden>Annuler</button>
+        </form>
+      </section>
+
+      <!-- Onglet Feed : les ramassages publiés (arrive avec US10) -->
+      <section id="onglet-feed" class="ecran" role="tabpanel" aria-labelledby="tab-feed" tabindex="-1" hidden>
+        <h2>Feed</h2>
+        <p class="a-venir">Le feed des avant / après arrive au prochain item.</p>
+      </section>
+
+      <!-- Onglet Ramasser : choisir une zone, photos, publier (US5, US7, US9, US10) -->
+      <section id="onglet-ramasser" class="ecran" role="tabpanel" aria-labelledby="tab-ramasser" tabindex="-1" hidden>
+        <h2>Ramasser</h2>
+        <p class="a-venir">Le choix d'une zone rouge arrive au prochain item.</p>
+      </section>
+
+      <!-- [S3][US1] Onglet Moi : le pseudo et deux ou trois réglages -->
+      <section id="onglet-moi" class="ecran" role="tabpanel" aria-labelledby="tab-moi" tabindex="-1" hidden>
+        <h2>Moi</h2>
+
+        <div class="carte carte-profil">
+          <p class="etiquette">Ton pseudo</p>
+          <p class="pseudo" id="moi-pseudo"></p>
+          <div class="actions">
+            <button type="button" id="bouton-changer-pseudo" class="bouton bouton-secondaire">Changer de pseudo</button>
+            <button type="button" id="bouton-deconnexion" class="bouton bouton-secondaire">Se déconnecter</button>
+          </div>
+        </div>
+
+        <a class="bouton bouton-secondaire bouton-large" href="../site/">Voir la carte</a>
+
+        <p class="aide" id="moi-mode"></p>
+        <p class="aide aide-petite">Les photos restent dans le navigateur en démo locale : son stockage est limité à quelques Mo, donc à quelques ramassages.</p>
+      </section>
+
+    </main>
+
+    <!-- Barre du bas : les trois onglets -->
+    <nav class="navigation" role="tablist" aria-label="Sections de l'app">
+      <button type="button" class="onglet" role="tab" id="tab-feed" aria-controls="onglet-feed" aria-selected="false" data-onglet="feed">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+        <span>Feed</span>
+      </button>
+      <button type="button" class="onglet" role="tab" id="tab-ramasser" aria-controls="onglet-ramasser" aria-selected="false" data-onglet="ramasser">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v10"/><path d="M7 8l5-5 5 5"/><path d="M4 13h16l-1.5 8h-13z"/></svg>
+        <span>Ramasser</span>
+      </button>
+      <button type="button" class="onglet" role="tab" id="tab-moi" aria-controls="onglet-moi" aria-selected="false" data-onglet="moi">
+        <svg class="icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span>Moi</span>
+      </button>
+    </nav>
+
   </div>
+
+  <noscript><p class="noscript">Cette application a besoin de JavaScript.</p></noscript>
+
+  <!-- commun/js/config.js n'existe pas par défaut (il est ignoré par git) : le
+       navigateur note une 404 dans la console et l'app tourne en mode local.
+       Pour passer sur Supabase, copier commun/js/config.example.js en
+       commun/js/config.js et remplir les clés. -->
+  <script src="../commun/js/config.js"></script>
+  <script src="../commun/js/store.js"></script>
+  <script src="../commun/js/photos.js"></script>
+  <script src="../commun/js/session.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
