@@ -165,6 +165,19 @@
           <button type="button" id="bouton-abandonner-relecture" class="bouton bouton-lien">Abandonner ce ramassage</button>
         </div>
 
+        <!-- [S4][US11] Vue 4 : la zone est passée au vert -->
+        <div id="vue-bravo" hidden>
+          <div class="carte carte-bravo" role="status">
+            <span class="badge badge-vert">Nettoyée</span>
+            <h2 id="bravo-titre">Bravo <span id="bravo-pseudo"></span>, <span id="bravo-zone"></span> est passée au vert</h2>
+            <p class="aide">Ton avant / après est dans le feed et la carte est à jour. Merci pour la rade.</p>
+            <div class="actions">
+              <button type="button" id="bouton-voir-feed" class="bouton bouton-principal">Voir le feed</button>
+              <a class="bouton bouton-fantome" id="bravo-lien-carte" href="../site/">Voir sur la carte</a>
+            </div>
+          </div>
+        </div>
+
       </section>
 
       <!-- [S3][US1] Onglet Moi : le pseudo et deux ou trois réglages -->
@@ -184,6 +197,13 @@
 
         <p class="aide" id="moi-mode"></p>
         <p class="aide aide-petite">Les photos restent dans le navigateur en démo locale : son stockage est limité à quelques Mo, donc à quelques ramassages.</p>
+
+        <!-- [S4][US11] Réinitialiser la démo (seulement en mode local) -->
+        <div class="carte carte-demo" id="carte-demo" hidden>
+          <p class="etiquette">Démo</p>
+          <p class="aide">Remet les 15 zones de départ et vide le feed. Ton pseudo est gardé.</p>
+          <button type="button" id="bouton-reinitialiser" class="bouton bouton-fantome bouton-large">Réinitialiser la démo</button>
+        </div>
       </section>
 
     </main>

@@ -13,6 +13,8 @@
  *                  ramassage en cours (un rechargement ne la perd pas).
  * Sprint 4 (US9) : photo après, puis relecture avant / après côte à côte.
  * Sprint 4 (US10) : publication (photos + GZD.store) et feed des ramassages.
+ * Sprint 4 (US11) : la zone passe au vert, écran « Bravo », réinitialisation
+ *                   de la démo depuis l'onglet Moi.
  *
  * Pas de framework ni de build. Les scripts partagés avec le site sont chargés
  * avant ce fichier et exposent GZD.store (données), GZD.photos (réduction des
@@ -221,7 +223,23 @@
     $('moi-mode').textContent = (store.mode === 'local')
       ? 'Démo locale : les données restent dans ce navigateur.'
       : 'Connecté à Supabase : les données sont partagées avec tout le monde.';
+    // [S4][US11] La réinitialisation n'a de sens qu'en démo locale.
+    $('carte-demo').hidden = (store.mode !== 'local');
   }
+
+  /** [S4][US11] Remet les zones de départ et vide le feed ; le pseudo reste. */
+  $('bouton-reinitialiser').addEventListener('click', function () {
+    if (!window.confirm('Réinitialiser la démo ? Les zones reviennent à leur état de départ et le feed est vidé. Ton pseudo est gardé.')) { return; }
+    var bouton = this;
+    bouton.disabled = true;
+    Promise.resolve(store.reinitialiser()).then(function () {
+      session.effacerRamassage();
+      window.location.reload();
+    }).catch(function (erreur) {
+      bouton.disabled = false;
+      afficherMessage('La réinitialisation a échoué : ' + (erreur.message || 'erreur inconnue'), true);
+    });
+  });
 
   $('bouton-changer-pseudo').addEventListener('click', function () {
     afficherEcranPseudo('moi');
@@ -285,6 +303,7 @@
   var elVueZones = $('vue-zones');
   var elVueEnCours = $('vue-en-cours');
   var elVueRelecture = $('vue-relecture');
+  var elVueBravo = $('vue-bravo');
   var elListeZones = $('liste-zones');
   var elZoneChoisie = $('zone-choisie');
   var elZonesPosition = $('zones-position');
@@ -308,6 +327,7 @@
     elVueZones.hidden = (vue !== elVueZones);
     elVueEnCours.hidden = (vue !== elVueEnCours);
     elVueRelecture.hidden = (vue !== elVueRelecture);
+    elVueBravo.hidden = (vue !== elVueBravo);
   }
 
   /** Le nom et la commune d'une zone, écrits dans deux éléments donnés. */
@@ -536,21 +556,42 @@
         photo_apres_url: urls[1],
         publie_le: new Date().toISOString()
       });
-    }).then(function (publication) {
+    }).then(function () {
+      // [S4][US11] La publication est là : la zone passe au vert sur la carte.
+      return store.mettreAJourZone(ramassage.zone_id, { etat: 'vert' }).then(function (zone) {
+        return zone;
+      }, function (erreur) {
+        // La publication existe déjà : on ne bloque pas, on prévient.
+        afficherMessage('Publié, mais la zone n\'a pas pu passer au vert : ' + (erreur.message || 'erreur inconnue'), true);
+        return null;
+      });
+    }).then(function (zone) {
       session.effacerRamassage();
       etat.pretPourApres = false;
-      effacerMessage();
-      apresPublication(publication, ramassage.zone_id);
+      if (elMessage.textContent === 'Publication en cours...') { effacerMessage(); }
+      afficherBravo(pseudo, ramassage.zone_id, zone);
     }).catch(function (erreur) {
       bouton.disabled = false;
       afficherMessage('La publication a échoué : ' + (erreur.message || 'erreur inconnue') + '. Réessaie.', true);
     });
   });
 
-  /** Ce qui se passe une fois la publication enregistrée. */
-  function apresPublication(publication, zoneId) {
-    ouvrirOnglet('feed');
+  /** [S4][US11] L'écran « Bravo » : la zone est passée au vert. */
+  function afficherBravo(pseudo, zoneId, zone) {
+    montrerVue(elVueBravo);
+    $('bravo-pseudo').textContent = pseudo;
+    $('bravo-zone').textContent = (zone && zone.nom) || 'la zone';
+    $('bravo-lien-carte').href = lienCarte(zoneId);
+    if (!zone || !zone.nom) {
+      store.chargerZones().then(function (zones) {
+        var trouvee = zones.filter(function (z) { return z.id === zoneId; })[0];
+        if (trouvee) { $('bravo-zone').textContent = trouvee.nom; }
+      });
+    }
+    window.scrollTo(0, 0);
   }
+
+  $('bouton-voir-feed').addEventListener('click', function () { ouvrirOnglet('feed'); });
 
   /* ------------------------------------------------------------------ */
   /* 8c. [S4][US10] Onglet Feed                                          */
