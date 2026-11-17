@@ -31,10 +31,14 @@
     <!-- Message d'erreur (ex. : données non chargées). Caché par défaut. -->
     <div id="message" class="message" role="alert" hidden></div>
 
-    <!-- [S2][US2] Outils de la carte : se recentrer autour de soi -->
+    <!-- [S2][US2] Outils de la carte : se recentrer autour de soi.
+         [S3][US3] Et la liste des zones rouges, de la plus proche à la plus loin. -->
     <div class="outils-carte">
       <button type="button" class="bouton-carte" id="bouton-position" title="Recentrer la carte autour de ma position">
         Autour de moi
+      </button>
+      <button type="button" class="bouton-carte" id="bouton-liste" title="Les zones rouges, de la plus proche à la plus loin">
+        Zones à nettoyer
       </button>
     </div>
 
@@ -96,6 +100,15 @@
         J'y vais <span class="etiquette">Sprint 3</span>
       </button>
       <p class="aide">Fonction prévue au sprint 3 : choisir la zone et s'y rendre.</p>
+    </section>
+
+    <!-- [S3][US3] Liste des zones rouges, de la plus proche à la plus loin (Léa cherche où aller) -->
+    <section id="panneau-liste" class="panneau" aria-labelledby="liste-titre" tabindex="-1" hidden>
+      <button type="button" class="panneau-fermer" aria-label="Fermer la liste">&times;</button>
+      <h2 id="liste-titre">Zones à nettoyer</h2>
+      <p class="liste-compteur" id="liste-compteur" aria-live="polite">…</p>
+      <p class="aide aide-gauche" id="liste-origine">Recherche de votre position...</p>
+      <ul class="liste-zones" id="liste-zones" aria-label="Zones rouges, de la plus proche à la plus loin"></ul>
     </section>
 
     <!-- [S2][US21] Formulaire de signalement (Marc voit une zone sale) -->

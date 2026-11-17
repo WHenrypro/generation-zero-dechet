@@ -584,3 +584,70 @@ main {
     width: 420px;
   }
 }
+
+/* ---------- [S3][US3] Liste des zones rouges ---------- */
+
+.liste-compteur {
+  margin: 0;
+  font-weight: 700;
+}
+
+.liste-zones {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Une ligne est un bouton : toute la surface est cliquable */
+.ligne-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #E2E8F0;
+  border-left: 4px solid var(--etat-rouge);
+  border-radius: 10px;
+  background: var(--blanc);
+  color: var(--texte);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ligne-zone:hover {
+  background: #EAF2FB;
+}
+
+.ligne-zone strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--bleu-fonce);
+}
+
+.ligne-detail {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: var(--texte-doux);
+}
+
+.distance {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--fond-clair);
+  color: var(--bleu-fonce);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.liste-vide {
+  margin: 12px 0 0;
+  color: var(--texte-doux);
+  font-size: 0.95rem;
+}
