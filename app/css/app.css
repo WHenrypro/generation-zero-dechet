@@ -595,6 +595,33 @@ label {
   text-transform: uppercase;
 }
 
+/* ---------- [S4][US9] Avant / après côte à côte ---------- */
+
+.avant-apres {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.avant-apres .apercu {
+  margin: 0;
+}
+
+.avant-apres .apercu img {
+  aspect-ratio: 3 / 4;
+  max-height: none;
+}
+
+.actions .bouton-fantome {
+  position: relative;
+}
+
+.actions .bouton-fantome:focus-within {
+  outline: 3px solid #75b5a0;
+  outline-offset: 2px;
+}
+
 /* ---------- Écran pseudo ---------- */
 
 .ecran-pseudo {

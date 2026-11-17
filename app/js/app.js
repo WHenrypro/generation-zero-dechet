@@ -11,6 +11,7 @@
  *                  depuis la carte du site.
  * Sprint 4 (US7) : photo avant, réduite par GZD.photos et gardée dans le
  *                  ramassage en cours (un rechargement ne la perd pas).
+ * Sprint 4 (US9) : photo après, puis relecture avant / après côte à côte.
  *
  * Pas de framework ni de build. Les scripts partagés avec le site sont chargés
  * avant ce fichier et exposent GZD.store (données), GZD.photos (réduction des
@@ -281,23 +282,43 @@
 
   var elVueZones = $('vue-zones');
   var elVueEnCours = $('vue-en-cours');
+  var elVueRelecture = $('vue-relecture');
   var elListeZones = $('liste-zones');
   var elZoneChoisie = $('zone-choisie');
   var elZonesPosition = $('zones-position');
 
-  /** Point d'entrée de l'onglet : liste des zones, ou ramassage en cours. */
+  /**
+   * Point d'entrée de l'onglet : liste des zones, ramassage en cours, ou
+   * relecture avant / après quand les deux photos sont là.
+   */
   function afficherRamasser() {
     var ramassage = session.lireRamassage();
-    if (ramassage) {
-      afficherEnCours(ramassage);
-    } else {
+    if (!ramassage) {
       afficherListeZones();
+    } else if (ramassage.photo_avant && ramassage.photo_apres) {
+      afficherRelecture(ramassage);
+    } else {
+      afficherEnCours(ramassage);
     }
   }
 
   function montrerVue(vue) {
     elVueZones.hidden = (vue !== elVueZones);
     elVueEnCours.hidden = (vue !== elVueEnCours);
+    elVueRelecture.hidden = (vue !== elVueRelecture);
+  }
+
+  /** Le nom et la commune d'une zone, écrits dans deux éléments donnés. */
+  function ecrireZone(zoneId, idNom, idCommune) {
+    $(idNom).textContent = '...';
+    $(idCommune).textContent = '';
+    store.chargerZones().then(function (zones) {
+      var zone = zones.filter(function (z) { return z.id === zoneId; })[0];
+      $(idNom).textContent = zone ? zone.nom : 'Zone inconnue';
+      $(idCommune).textContent = zone ? zone.commune : 'Cette zone n\'est plus dans la liste.';
+    }).catch(function () {
+      $(idNom).textContent = 'Zone ' + zoneId;
+    });
   }
 
   /**
@@ -432,17 +453,7 @@
   function afficherEnCours(ramassage) {
     montrerVue(elVueEnCours);
     $('en-cours-lien-carte').href = lienCarte(ramassage.zone_id);
-    $('en-cours-nom').textContent = '...';
-    $('en-cours-commune').textContent = '';
-
-    store.chargerZones().then(function (zones) {
-      var zone = zones.filter(function (z) { return z.id === ramassage.zone_id; })[0];
-      $('en-cours-nom').textContent = zone ? zone.nom : 'Zone inconnue';
-      $('en-cours-commune').textContent = zone ? zone.commune : 'Cette zone n\'est plus dans la liste.';
-    }).catch(function () {
-      $('en-cours-nom').textContent = 'Zone ' + ramassage.zone_id;
-    });
-
+    ecrireZone(ramassage.zone_id, 'en-cours-nom', 'en-cours-commune');
     afficherEtapes(ramassage);
   }
 
@@ -465,12 +476,34 @@
     $('avant-reprendre').className = 'bouton bouton-lien' + (ramassage.photo_apres ? ' seulement-courante' : '');
   }
 
-  $('bouton-abandonner').addEventListener('click', function () {
+  function abandonnerRamassage() {
     if (!window.confirm('Abandonner ce ramassage ? Les photos déjà prises seront perdues.')) { return; }
     session.effacerRamassage();
     etat.pretPourApres = false;
     afficherMessage('Ramassage abandonné. La zone reste à nettoyer.');
     afficherRamasser();
+    window.scrollTo(0, 0);
+  }
+
+  $('bouton-abandonner').addEventListener('click', abandonnerRamassage);
+  $('bouton-abandonner-relecture').addEventListener('click', abandonnerRamassage);
+
+  /* ------------------------------------------------------------------ */
+  /* 8b. [S4][US9] Relecture avant / après                               */
+  /* ------------------------------------------------------------------ */
+
+  /** Les deux photos côte à côte, avant de publier. */
+  function afficherRelecture(ramassage) {
+    montrerVue(elVueRelecture);
+    ecrireZone(ramassage.zone_id, 'relecture-nom', 'relecture-commune');
+    $('relecture-avant').src = ramassage.photo_avant || '';
+    $('relecture-apres').src = ramassage.photo_apres || '';
+    // « Publier » n'est actif que si les deux photos sont là.
+    $('bouton-publier').disabled = !(ramassage.photo_avant && ramassage.photo_apres);
+  }
+
+  $('bouton-publier').addEventListener('click', function () {
+    afficherMessage('La publication arrive au prochain item.');
   });
 
   /* ------------------------------------------------------------------ */
@@ -503,7 +536,8 @@
           return;
         }
         effacerMessage();
-        afficherEnCours(session.lireRamassage());
+        afficherRamasser();
+        window.scrollTo(0, 0);
       }).catch(function (erreur) {
         afficherMessage(erreur.message || 'Impossible de lire cette photo.', true);
       }).then(function () {
@@ -513,10 +547,14 @@
   }
 
   brancherPhoto('fichier-avant', 'photo_avant');
+  // [S4][US9] La photo après : à l'étape 3, et « Reprendre l'après » en relecture.
+  brancherPhoto('fichier-apres', 'photo_apres');
+  brancherPhoto('fichier-apres-reprise', 'photo_apres');
 
-  // Étape 2 : « J'ai fini, photo après »
+  // Étape 2 : « J'ai fini, photo après » ouvre l'étape 3.
   $('bouton-fini').addEventListener('click', function () {
-    afficherMessage('La photo après arrive au prochain item.');
+    etat.pretPourApres = true;
+    afficherEtapes(session.lireRamassage());
   });
 
   /* ------------------------------------------------------------------ */
