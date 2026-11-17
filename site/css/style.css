@@ -29,6 +29,12 @@
   box-sizing: border-box;
 }
 
+/* L'attribut hidden doit toujours cacher l'élément, même quand une classe
+   lui donne display: flex ou block (bandeau de placement, aperçu photo...). */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -366,5 +372,215 @@ main {
   .outils-carte {
     top: 96px;
     right: 16px;
+  }
+}
+
+/* ---------- [S2][US21] Signaler une zone ---------- */
+
+/* Bouton flottant en bas à droite */
+.fab {
+  position: absolute;
+  right: 12px;
+  bottom: 28px;
+  z-index: 850;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--etat-rouge);
+  color: var(--blanc);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(214, 69, 69, 0.45);
+}
+
+.fab:hover {
+  background: #BE3A3A;
+}
+
+/* Bandeau affiché pendant le choix du point sur la carte */
+.bandeau-placement {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 60px;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bleu-fonce);
+  color: var(--blanc);
+  font-size: 0.9rem;
+  box-shadow: var(--ombre);
+}
+
+.bandeau-placement .lien-discret {
+  color: var(--blanc);
+}
+
+.curseur-cible {
+  cursor: crosshair;
+}
+
+/* Confirmation courte en haut de la carte */
+.toast {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 60px;
+  z-index: 960;
+  padding: 10px 14px;
+  border-left: 4px solid var(--vert);
+  border-radius: 8px;
+  background: #E7F7EC;
+  color: #0F5A2E;
+  font-size: 0.9rem;
+  box-shadow: var(--ombre);
+}
+
+/* Formulaires */
+.panneau h2 {
+  margin: 4px 0 6px;
+  font-size: 1.15rem;
+  color: var(--bleu-fonce);
+}
+
+.champ {
+  display: block;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.champ > span,
+.champ > legend {
+  display: block;
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--texte);
+}
+
+.champ small {
+  font-weight: 400;
+  color: var(--texte-doux);
+}
+
+.champ input[type="text"],
+.champ select,
+.champ textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 10px;
+  background: var(--blanc);
+  color: var(--texte);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.champ input[type="file"] {
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.champ textarea {
+  resize: vertical;
+}
+
+.ligne-boutons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bouton-secondaire {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid var(--bleu);
+  border-radius: 10px;
+  background: var(--blanc);
+  color: var(--bleu-fonce);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bouton-secondaire:hover:not(:disabled) {
+  background: #EAF2FB;
+}
+
+.bouton-secondaire:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.apercu {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  margin: -6px 0 14px;
+  border-radius: 10px;
+}
+
+.aide-gauche {
+  text-align: left;
+  margin: 6px 0 0;
+}
+
+.aide.ok {
+  color: var(--vert);
+  font-weight: 600;
+}
+
+.erreur {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #FDECEC;
+  color: #8A1C1C;
+  font-size: 0.9rem;
+}
+
+.lien-discret {
+  padding: 6px 4px;
+  border: 0;
+  background: none;
+  color: var(--texte-doux);
+  font: inherit;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.lien-centre {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  /* Sur grand écran le bouton se centre en bas de la carte */
+  .fab {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 32px;
+  }
+
+  .bandeau-placement,
+  .toast,
+  .message {
+    left: auto;
+    right: 70px;
+    width: 420px;
   }
 }

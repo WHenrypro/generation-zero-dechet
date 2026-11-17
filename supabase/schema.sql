@@ -31,6 +31,7 @@ create table if not exists public.zones (
   lat          double precision not null check (lat between -90 and 90),
   lon          double precision not null check (lon between -180 and 180),
   description  text,
+  photo_url    text,                                -- photo du signalement (URL publique Storage), facultative
   signale_le   timestamptz not null default now(), -- date du signalement
   created_at   timestamptz not null default now()  -- date d'insertion en base
 );
@@ -42,6 +43,7 @@ comment on column public.zones.type is 'Type de déchet dominant : plastique, ve
 comment on column public.zones.quantite is 'Estimation : poignée, un sac, plusieurs sacs, encombrant.';
 comment on column public.zones.lat is 'Latitude WGS84 (degrés décimaux).';
 comment on column public.zones.lon is 'Longitude WGS84 (degrés décimaux), négative à l''ouest de Greenwich.';
+comment on column public.zones.photo_url is 'Photo prise au moment du signalement (US21), URL publique dans le bucket photos. Facultative.';
 comment on column public.zones.signale_le is 'Date et heure du signalement par la personne qui a vu la zone sale.';
 
 create index if not exists zones_etat_idx on public.zones (etat);
