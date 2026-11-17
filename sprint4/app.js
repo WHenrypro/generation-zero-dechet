@@ -5,9 +5,9 @@ const CONFIG={SPRINT:Number(document.body.dataset.sprint||4),KEY:'gzdd-demo-v1'}
 const $=id=>document.getElementById(id);
 const SEED=[
 {id:'z1',name:'Plage du Moulin Blanc',lat:48.3914,lng:-4.4325,type:'Plastiques',quantity:'Moyenne',description:'Déchets plastiques près du chemin côtier.',status:'sale',before:null,after:null,by:null},
-{id:'z2',name:'Anse de Sainte-Anne',lat:48.3597,lng:-4.5561,type:'Emballages',quantity:'Faible',description:'Emballages signalés sur la plage.',status:'sale',before:null,after:null,by:null},
+{id:'z2',name:'Anse de Sainte-Anne',lat:48.3597,lng:-4.5561,type:'Emballages',quantity:'Faible',description:'Emballages signalés sur la plage.',status:'progress',before:null,after:null,by:null},
 {id:'z3',name:'Plage de Trez-Hir',lat:48.3373,lng:-4.7016,type:'Divers',quantity:'Élevée',description:'Déchets sur la partie haute de la plage.',status:'sale',before:null,after:null,by:null},
-{id:'z4',name:'Pointe de l’Armorique',lat:48.3439,lng:-4.4158,type:'Plastiques',quantity:'Faible',description:'Quelques déchets à proximité du sentier.',status:'sale',before:null,after:null,by:null}];
+{id:'z4',name:'Pointe de l’Armorique',lat:48.3439,lng:-4.4158,type:'Plastiques',quantity:'Faible',description:'Quelques déchets à proximité du sentier.',status:'clean',before:null,after:null,by:null}];
 const clone=x=>JSON.parse(JSON.stringify(x));
 function load(){try{const x=JSON.parse(localStorage.getItem(CONFIG.KEY));if(x&&Array.isArray(x.zones))return x;}catch(e){}return{pseudo:'',zones:clone(SEED)}}
 let state=load(),selected=state.zones[0].id,map,markers=[],pendingBefore=null,pendingAfter=null;
@@ -36,7 +36,11 @@ if(enabled(3)){const start=$('startClean');if(start)start.onclick=()=>{if(!state
 function showTab(tab){document.querySelectorAll('.tabview').forEach(x=>x.classList.add('hidden'));$(tab+'View').classList.remove('hidden');document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('secondary',b.dataset.tab!==tab))}
 function shrink(file){return new Promise((resolve,reject)=>{if(!file.type.startsWith('image/'))return reject(Error('fichier non image'));const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const scale=Math.min(1,850/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);resolve(c.toDataURL('image/jpeg',.68))};img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('image illisible'))};img.src=url})}
 function init(){map=L.map('map').setView([48.375,-4.53],11);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors',maxZoom:19}).addTo(map);
-$('sprintLabel').textContent='Sprint '+CONFIG.SPRINT;$('appFeatures').classList.toggle('hidden',!enabled(3));$('reportSection').classList.toggle('hidden',!enabled(2));$('tabs').classList.toggle('hidden',!enabled(3));
+$('sprintLabel').textContent = 'Sprint ' + CONFIG.SPRINT;
+
+$('reportSection').classList.toggle('hidden', !enabled(2));
+
+$('tabs').classList.toggle('hidden', !enabled(3));
 $('profileForm').onsubmit=e=>{e.preventDefault();const p=$('pseudo').value.trim();if(p.length<2||p.length>30)return alert('Pseudo : entre 2 et 30 caractères.');state.pseudo=p;save();render();showTab('zones')};$('pseudo').value=state.pseudo;
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));$('reportForm').onsubmit=e=>{e.preventDefault();const name=$('newName').value.trim(),lat=Number($('newLat').value),lng=Number($('newLng').value);if(!name||!Number.isFinite(lat)||!Number.isFinite(lng)||lat<48.2||lat>48.55||lng< -4.9||lng> -4.1)return alert('Nom ou coordonnées invalides pour la rade de Brest.');const z={id:'z'+Date.now(),name,lat,lng,type:$('newType').value,quantity:$('newQty').value,description:$('newDesc').value.trim()||'Signalement citoyen',status:'sale',before:null,after:null,by:null};state.zones.push(z);if(!save()){state.zones.pop();return}e.target.reset();select(z.id);showTab('zones');alert('Nouvelle zone signalée !')};
 $('pickOnMap').onclick=()=>{alert('Cliquez sur la carte pour renseigner les coordonnées du signalement.');map.once('click',e=>{$('newLat').value=e.latlng.lat.toFixed(5);$('newLng').value=e.latlng.lng.toFixed(5)})};
