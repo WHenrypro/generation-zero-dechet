@@ -1,10 +1,10 @@
 /*
- * Géné Z(éro) Déchet, application
- * ===============================
+ * Géné Z(éro) Déchet, le site : la carte interactive de la rade
+ * ============================================================
  *
  * Sprint 1 (T1, T3) : carte Leaflet de la rade, ronds colorés par état,
  *                     fiche d'une zone, compteur.
- * Sprint 2 (US2)    : les zones viennent de la couche de données (js/store.js,
+ * Sprint 2 (US2)    : les zones viennent de la couche de données (commun/js/store.js,
  *                     mode local ou Supabase), bouton « Autour de moi » qui
  *                     recentre la carte sur la position de la personne.
  *

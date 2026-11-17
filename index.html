@@ -1,11 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Géné Z(éro) Déchet</title>
-  <meta http-equiv="refresh" content="0; url=app/">
+  <meta name="description" content="Zéro déchets en rade de Brest : la carte des zones à nettoyer (le site) et l'app pour ramasser et poster son avant/après.">
+  <meta name="theme-color" content="#0F4F8F">
+  <style>
+    :root { --vert: #2E9E5B; --bleu: #1B6FB8; --bleu-fonce: #0F4F8F; --texte: #1F2937; --doux: #64748B; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texte); background: linear-gradient(180deg, #EAF2FB, #F7FAFC 60%); }
+    main { max-width: 820px; margin: 0 auto; padding: 48px 16px 64px; }
+    h1 { margin: 0 0 6px; font-size: 2rem; color: var(--bleu-fonce); }
+    .slogan { margin: 0 0 32px; font-size: 1.1rem; color: var(--doux); }
+    .cartes { display: grid; gap: 16px; }
+    @media (min-width: 640px) { .cartes { grid-template-columns: 1fr 1fr; } }
+    a.carte { display: block; padding: 24px; border-radius: 16px; text-decoration: none; color: inherit; background: #fff; box-shadow: 0 6px 24px rgba(15, 79, 143, 0.12); border-top: 6px solid var(--bleu); transition: transform 0.15s; }
+    a.carte:hover { transform: translateY(-2px); }
+    a.carte.app { border-top-color: var(--vert); background: #0B0F14; color: #F1F5F9; }
+    a.carte h2 { margin: 0 0 8px; font-size: 1.3rem; }
+    a.carte p { margin: 0 0 14px; line-height: 1.45; }
+    a.carte .lien { font-weight: 700; color: var(--bleu); }
+    a.carte.app .lien { color: #8FE07A; }
+    .lien-bas { margin-top: 32px; font-size: 0.9rem; color: var(--doux); }
+    .lien-bas a { color: var(--bleu-fonce); }
+  </style>
 </head>
 <body>
-  <p>L'application est dans <a href="app/">app/</a>.</p>
+  <main>
+    <h1>Géné Z(éro) Déchet</h1>
+    <p class="slogan">Zéro déchets en rade de Brest. Une carte pour voir où agir, une app pour prouver qu'on a agi.</p>
+
+    <div class="cartes">
+      <a class="carte" href="site/">
+        <h2>Le site : la carte de la rade</h2>
+        <p>Les zones sales en rouge, celles en cours en orange, les nettoyées en vert. On signale une zone en trente secondes, avec une photo.</p>
+        <span class="lien">Ouvrir la carte</span>
+      </a>
+      <a class="carte app" href="app/">
+        <h2>L'app : ramasse, poste, recommence</h2>
+        <p>Choisis une zone rouge près de toi. Photo avant, photo après, sans filtre. Tu publies, la zone passe au vert sur la carte.</p>
+        <span class="lien">Ouvrir l'app</span>
+      </a>
+    </div>
+
+    <p class="lien-bas">Les deux partagent les mêmes données : ce qui est publié dans l'app apparaît sur la carte du site. MVP construit pendant le TP Scrum du 17 novembre 2026 (M2 Gestion de projet, équipe NA-02).</p>
+  </main>
 </body>
 </html>

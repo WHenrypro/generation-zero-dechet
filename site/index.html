@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Géné Z(éro) Déchet · la carte de la rade</title>
+  <meta name="description" content="Carte des zones à nettoyer en rade de Brest. MVP de l'association, TP Scrum M2.">
+  <meta name="theme-color" content="#0F4F8F">
+
+  <!-- Leaflet 1.9.4 (bibliothèque de cartes), chargé depuis le CDN unpkg.
+       Les attributs integrity sont ceux du site officiel de Leaflet : le
+       navigateur refuse le fichier s'il ne correspond pas exactement. -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Bandeau : nom de l'appli et compteur de zones à nettoyer -->
+  <header class="bandeau">
+    <h1>Géné Z(éro) Déchet <span class="sous-titre">la carte</span></h1>
+    <p class="compteur" aria-live="polite">
+      <strong id="compteur-nombre">…</strong>
+      <span id="compteur-texte">zones à nettoyer</span>
+    </p>
+  </header>
+
+  <main>
+    <!-- La carte Leaflet se dessine dans cette div (voir js/app.js) -->
+    <div id="carte" aria-label="Carte de la rade de Brest"></div>
+
+    <!-- Message d'erreur (ex. : données non chargées). Caché par défaut. -->
+    <div id="message" class="message" role="alert" hidden></div>
+
+    <!-- [S2][US2] Outils de la carte : se recentrer autour de soi -->
+    <div class="outils-carte">
+      <button type="button" class="bouton-carte" id="bouton-position" title="Recentrer la carte autour de ma position">
+        Autour de moi
+      </button>
+    </div>
+
+    <!-- Légende des couleurs -->
+    <aside class="legende" aria-label="Légende">
+      <ul>
+        <li><span class="puce puce-rouge"></span> À nettoyer</li>
+        <li><span class="puce puce-orange"></span> Ramassage en cours</li>
+        <li><span class="puce puce-vert"></span> Nettoyée</li>
+      </ul>
+    </aside>
+
+    <!-- Fiche d'une zone : s'ouvre quand on touche un rond sur la carte.
+         Sur mobile elle remonte depuis le bas, sur grand écran elle se place à gauche. -->
+    <section id="fiche" class="panneau fiche" aria-labelledby="fiche-nom" tabindex="-1" hidden>
+      <button type="button" class="panneau-fermer" aria-label="Fermer la fiche">&times;</button>
+
+      <!-- Photo : pour l'instant une image de remplacement dessinée en SVG.
+           La vraie photo du signalement viendra avec US21 / US4. -->
+      <div class="fiche-photo">
+        <svg viewBox="0 0 320 180" role="img" aria-label="Photo non disponible pour l'instant" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="180" fill="#DBEEFB"/>
+          <circle cx="262" cy="46" r="20" fill="#8FE07A"/>
+          <path d="M0 112 Q40 98 80 112 T160 112 T240 112 T320 112 V180 H0 Z" fill="#1B6FB8" opacity="0.85"/>
+          <path d="M0 140 Q40 126 80 140 T160 140 T240 140 T320 140 V180 H0 Z" fill="#0F4F8F" opacity="0.9"/>
+          <g fill="none" stroke="#0F4F8F" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="128" y="50" width="64" height="46" rx="8"/>
+            <circle cx="160" cy="73" r="12"/>
+            <path d="M146 50 l6 -10 h16 l6 10"/>
+          </g>
+          <text x="160" y="168" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#FFFFFF">Photo à venir</text>
+        </svg>
+      </div>
+
+      <h2 id="fiche-nom">Nom de la zone</h2>
+      <p class="fiche-commune" id="fiche-commune">Commune</p>
+      <p class="fiche-etat-ligne"><span class="badge" id="fiche-etat">État</span></p>
+
+      <dl class="fiche-details">
+        <dt>Type de déchet</dt><dd id="fiche-type"></dd>
+        <dt>Quantité</dt><dd id="fiche-quantite"></dd>
+        <dt>Signalée le</dt><dd id="fiche-date"></dd>
+      </dl>
+      <p class="fiche-description" id="fiche-description"></p>
+
+      <!-- Bouton prévu au Sprint 3 (Léa choisit une zone et s'y rend).
+           Il est volontairement désactivé pour l'instant. -->
+      <button type="button" class="bouton-principal" id="bouton-jy-vais" disabled>
+        J'y vais <span class="etiquette">Sprint 3</span>
+      </button>
+      <p class="aide">Fonction prévue au sprint 3 : choisir la zone et s'y rendre.</p>
+    </section>
+  </main>
+
+  <noscript><p class="noscript">Cette application a besoin de JavaScript pour afficher la carte.</p></noscript>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- commun/js/config.js n'existe pas par défaut (il est ignoré par git) : le
+       navigateur note une 404 dans la console et le site tourne en mode local.
+       Pour passer sur Supabase, copier commun/js/config.example.js en
+       commun/js/config.js et remplir les clés. -->
+  <script src="../commun/js/config.js"></script>
+  <script src="../commun/js/store.js"></script>
+  <script src="js/site.js"></script>
+</body>
+</html>
