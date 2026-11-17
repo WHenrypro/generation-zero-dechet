@@ -1,0 +1,327 @@
+/*
+ * Géné Z(éro) Déchet, feuille de style (Sprint 1)
+ * Mobile d'abord : les règles de base visent un téléphone, le bloc
+ * @media (min-width: 768px) en bas adapte pour tablette et ordinateur.
+ */
+
+/* Palette de l'appli (variables CSS réutilisées partout) */
+:root {
+  --vert: #2E9E5B;
+  --vert-clair: #8FE07A;
+  --bleu: #1B6FB8;
+  --bleu-fonce: #0F4F8F;
+
+  /* Couleurs des états d'une zone (les mêmes que dans js/app.js) */
+  --etat-rouge: #D64545;
+  --etat-orange: #F28C28;
+  --etat-vert: #2E9E5B;
+  --etat-inconnu: #64748B;
+
+  --texte: #1F2937;
+  --texte-doux: #64748B;
+  --fond-clair: #F1F5F9;
+  --blanc: #FFFFFF;
+  --ombre: 0 4px 16px rgba(15, 79, 143, 0.25);
+  --rayon: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh; /* tient compte des barres du navigateur mobile */
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--texte);
+  background: var(--fond-clair);
+}
+
+/* ---------- Bandeau du haut ---------- */
+
+.bandeau {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 16px;
+  background: linear-gradient(90deg, var(--bleu-fonce), var(--bleu));
+  color: var(--blanc);
+  box-shadow: 0 2px 8px rgba(15, 79, 143, 0.3);
+  z-index: 1100; /* au-dessus de la carte Leaflet */
+}
+
+.bandeau h1 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.compteur {
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--vert);
+  color: var(--blanc);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.compteur strong {
+  font-size: 1.05rem;
+}
+
+/* ---------- Carte ---------- */
+
+main {
+  position: relative;
+  flex: 1;
+  min-height: 0; /* indispensable pour que la carte prenne la place restante */
+}
+
+#carte {
+  position: absolute;
+  inset: 0;
+  background: #CFE3F3; /* couleur visible pendant le chargement des tuiles */
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+/* ---------- Légende ---------- */
+
+.legende {
+  position: absolute;
+  left: 12px;
+  bottom: 28px;
+  z-index: 800;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--ombre);
+  font-size: 0.85rem;
+}
+
+.legende ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 5px;
+}
+
+.legende li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.puce {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--blanc);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.puce-rouge  { background: var(--etat-rouge); }
+.puce-orange { background: var(--etat-orange); }
+.puce-vert   { background: var(--etat-vert); }
+
+/* ---------- Message d'erreur ---------- */
+
+.message {
+  position: absolute;
+  top: 12px;
+  left: 60px;  /* laisse la place aux boutons de zoom de Leaflet */
+  right: 12px;
+  z-index: 950;
+  padding: 10px 14px;
+  border-left: 4px solid var(--etat-orange);
+  border-radius: 8px;
+  background: #FFF3CD;
+  color: #7A4B00;
+  box-shadow: var(--ombre);
+  font-size: 0.9rem;
+}
+
+/* ---------- Fiche d'une zone ---------- */
+
+.fiche {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  max-height: 62%;
+  overflow-y: auto;
+  padding: 16px 16px 20px;
+  border-radius: var(--rayon) var(--rayon) 0 0;
+  background: var(--blanc);
+  box-shadow: 0 -4px 20px rgba(15, 79, 143, 0.25);
+}
+
+.fiche[hidden] {
+  display: none;
+}
+
+.fiche-fermer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--bleu-fonce);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.fiche-photo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.fiche h2 {
+  margin: 12px 0 2px;
+  font-size: 1.15rem;
+  color: var(--bleu-fonce);
+}
+
+.fiche-commune {
+  margin: 0 0 8px;
+  color: var(--texte-doux);
+  font-size: 0.9rem;
+}
+
+.fiche-etat-ligne {
+  margin: 0 0 10px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--blanc);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--etat-inconnu);
+}
+
+.badge-rouge   { background: var(--etat-rouge); }
+.badge-orange  { background: var(--etat-orange); }
+.badge-vert    { background: var(--etat-vert); }
+.badge-inconnu { background: var(--etat-inconnu); }
+
+.fiche-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+.fiche-details dt {
+  color: var(--texte-doux);
+}
+
+.fiche-details dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.fiche-description {
+  margin: 0 0 14px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.bouton-principal {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--vert);
+  color: var(--blanc);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bouton-principal:hover:not(:disabled) {
+  background: #27874E;
+}
+
+.bouton-principal:disabled {
+  background: #A9B4C2;
+  cursor: not-allowed;
+}
+
+.etiquette {
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.aide {
+  margin: 8px 0 0;
+  text-align: center;
+  color: var(--texte-doux);
+  font-size: 0.8rem;
+}
+
+.noscript {
+  margin: 16px;
+  padding: 12px;
+  background: #FFF3CD;
+  border-radius: 8px;
+}
+
+/* ---------- Tablette et ordinateur ---------- */
+
+@media (min-width: 768px) {
+  .bandeau h1 {
+    font-size: 1.35rem;
+  }
+
+  /* La fiche devient un panneau à droite au lieu de monter depuis le bas */
+  .fiche {
+    left: auto;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: 360px;
+    max-height: none;
+    border-radius: var(--rayon);
+  }
+
+  .legende {
+    left: 16px;
+    bottom: 32px;
+    font-size: 0.9rem;
+  }
+}
