@@ -92,15 +92,22 @@ h1, h2, h3 {
 
 .logo {
   flex: none;
-  padding: 12px;
-  border-radius: 15px;
-  background: #bde4ad;
-  color: #174b37;
-  font-family: var(--police-titre);
-  font-size: 20px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.5px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f4f6f4;
+}
+
+.entete .eco {
+  color: #bde4ad;
+  font-weight: 600;
+}
+
+.logo-grand {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 12px;
 }
 
 .entete h1 {

@@ -36,6 +36,8 @@ Décisions prises pendant le sprint :
 - Bouton « Réinitialiser la démo » dans l'onglet Moi, visible seulement en mode local, pour rejouer la démo en revue.
 - US16 (minuteur 10 min) et US8 (état orange) restent hors MVP, notés comme suite sur le Miro.
 
+- Logo officiel de l'équipe (Z et vague, `commun/img/logo.svg`) et slogan « Pas de planète B, mais une génération Z. » repris dans l'app et l'accueil (branche `s4/charte-logo`).
+
 Blocages rencontrés et comment on les a levés :
 
 - Les photos en mode local sont des data URL dans le localStorage (quelques Mo) : réduction à 1024 px en JPEG et message si le stockage est plein.
