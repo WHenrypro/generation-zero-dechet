@@ -36,7 +36,7 @@ Décisions prises pendant le sprint :
 - Bouton « Réinitialiser la démo » dans l'onglet Moi, visible seulement en mode local, pour rejouer la démo en revue.
 - US16 (minuteur 10 min) et US8 (état orange) restent hors MVP, notés comme suite sur le Miro.
 
-- Logo officiel de l'équipe (Z et vague, `commun/img/logo.svg`) et slogan « Pas de planète B, mais une génération Z. » repris dans l'app et l'accueil (branche `s4/charte-logo`).
+- Logo officiel de l'équipe (Z et vague, `commun/img/logo.png`, PNG fond transparent) et slogan « Pas de planète B, mais une génération Z. » repris dans l'app et l'accueil (branche `s4/charte-logo`).
 
 - Le dossier `site/` devient une copie du site de l'équipe (dépôt generation-zero-dechet, `sprint4/`) : l'app renvoie vers leur carte, pas vers un second site. Limite : leur site stocke en IndexedDB, l'app en localStorage, le rapprochement est à faire ensemble.
 
