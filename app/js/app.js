@@ -1,5 +1,5 @@
 /*
- * Géné Z(éro) Déchet, l'app : le parcours de Léa
+ * Génération Z(éro déchet), l'app du ramassage : le parcours de Léa
  * ==============================================
  *
  * Une seule page, plusieurs « écrans » affichés ou masqués en JavaScript :
@@ -9,6 +9,8 @@
  * Sprint 3 (US5) : zones rouges les plus proches, « J'y vais », ramassage en
  *                  cours gardé dans GZD.session, lien profond ?zone=<id>
  *                  depuis la carte du site.
+ * Sprint 4 (US7) : photo avant, réduite par GZD.photos et gardée dans le
+ *                  ramassage en cours (un rechargement ne la perd pas).
  *
  * Pas de framework ni de build. Les scripts partagés avec le site sont chargés
  * avant ce fichier et exposent GZD.store (données), GZD.photos (réduction des
@@ -19,6 +21,7 @@
 
   var store = window.GZD.store;
   var session = window.GZD.session;
+  var photos = window.GZD.photos;
 
   /* ------------------------------------------------------------------ */
   /* 1. Réglages et état                                                 */
@@ -37,7 +40,8 @@
     ongletApresPseudo: null,  // onglet à rouvrir une fois le pseudo choisi
     position: null,           // { lat, lon } de la personne, une fois connue
     positionRefusee: false,   // la géolocalisation a échoué ou a été refusée
-    zoneDepuisCarte: null     // id de zone reçu dans l'URL (?zone=...)
+    zoneDepuisCarte: null,    // id de zone reçu dans l'URL (?zone=...)
+    pretPourApres: false      // « J'ai fini » a été pressé : on passe à la photo après
   };
 
   function $(id) { return document.getElementById(id); }
@@ -396,7 +400,7 @@
   }
 
   function badgeEtat(etatZone) {
-    var libelles = { rouge: 'À nettoyer', orange: 'Ramassage en cours', vert: 'Nettoyée' };
+    var libelles = { rouge: 'À nettoyer', orange: 'En cours', vert: 'Nettoyée' };
     return creer('span', { 'class': 'badge badge-' + (libelles[etatZone] ? etatZone : 'inconnu'),
       texte: libelles[etatZone] || 'État inconnu' });
   }
@@ -442,24 +446,81 @@
     afficherEtapes(ramassage);
   }
 
-  /** Met à jour l'état des quatre étapes (faite, courante, à venir). */
+  /** Met à jour l'état des quatre étapes (faite, courante, à venir) et leur contenu. */
   function afficherEtapes(ramassage) {
-    var courante = !ramassage.photo_avant ? 1 : !ramassage.photo_apres ? 3 : 4;
+    var courante = !ramassage.photo_avant ? 1
+      : !ramassage.photo_apres ? (etat.pretPourApres ? 3 : 2)
+      : 4;
     [1, 2, 3, 4].forEach(function (numero) {
       var valeur = (numero < courante) ? 'faite' : (numero === courante) ? 'courante' : 'a-venir';
       $('etape-' + numero).setAttribute('data-etat', valeur);
     });
+
+    // Étape 1 : le bouton photo avant la prise, l'aperçu après.
+    $('avant-prise').hidden = !!ramassage.photo_avant;
+    $('avant-apercu').hidden = !ramassage.photo_avant;
+    $('avant-image').src = ramassage.photo_avant || '';
+    $('avant-reprendre').hidden = !ramassage.photo_avant;
+    // Tant que la photo après n'est pas prise, on peut reprendre l'avant.
+    $('avant-reprendre').className = 'bouton bouton-lien' + (ramassage.photo_apres ? ' seulement-courante' : '');
   }
 
   $('bouton-abandonner').addEventListener('click', function () {
     if (!window.confirm('Abandonner ce ramassage ? Les photos déjà prises seront perdues.')) { return; }
     session.effacerRamassage();
+    etat.pretPourApres = false;
     afficherMessage('Ramassage abandonné. La zone reste à nettoyer.');
     afficherRamasser();
   });
 
   /* ------------------------------------------------------------------ */
-  /* 9. Démarrage                                                        */
+  /* 9. [S4][US7] Les photos                                             */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Branche un <input type="file"> : la photo choisie est réduite (JPEG,
+   * 1024 px max) puis rangée dans le ramassage en cours sous la clé donnée
+   * ('photo_avant' ou 'photo_apres'). L'écran est ensuite redessiné.
+   */
+  function brancherPhoto(idInput, cle) {
+    var input = $(idInput);
+    input.addEventListener('change', function () {
+      var fichier = input.files && input.files[0];
+      input.value = ''; // permet de rechoisir le même fichier (« Reprendre »)
+      if (!fichier) { return; }
+      var ramassage = session.lireRamassage();
+      if (!ramassage) { return; }
+
+      var bouton = input.parentNode;
+      bouton.classList.add('en-cours');
+      afficherMessage('Photo en cours de traitement...');
+
+      photos.lireEtReduire(fichier).then(function (dataUrl) {
+        var modifie = Object.assign({}, ramassage);
+        modifie[cle] = dataUrl;
+        if (!session.enregistrerRamassage(modifie)) {
+          afficherMessage('Stockage plein : la photo n\'a pas pu être gardée. Réinitialise la démo (onglet Moi) pour faire de la place.', true);
+          return;
+        }
+        effacerMessage();
+        afficherEnCours(session.lireRamassage());
+      }).catch(function (erreur) {
+        afficherMessage(erreur.message || 'Impossible de lire cette photo.', true);
+      }).then(function () {
+        bouton.classList.remove('en-cours');
+      });
+    });
+  }
+
+  brancherPhoto('fichier-avant', 'photo_avant');
+
+  // Étape 2 : « J'ai fini, photo après »
+  $('bouton-fini').addEventListener('click', function () {
+    afficherMessage('La photo après arrive au prochain item.');
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* 10. Démarrage                                                       */
   /* ------------------------------------------------------------------ */
 
   function demarrer() {
