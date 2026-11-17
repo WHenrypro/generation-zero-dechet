@@ -15,6 +15,10 @@ Le bouton rouge « + Signaler une zone » ouvre un formulaire. La position se do
 
 En mode local, tout reste dans le localStorage du navigateur (clé `gzd.zones`), photo comprise sous forme de data URL. Pour revenir aux 15 zones de démo : dans la console du navigateur, `GZD.store.reinitialiser()` puis recharger la page.
 
+## Zones à nettoyer, de la plus proche à la plus loin (US3)
+
+Le bouton « Zones à nettoyer » (à droite, sous « Autour de moi ») ouvre la liste des zones rouges triées par distance à vol d'oiseau (formule de haversine) depuis la position de la personne. Si la géolocalisation est refusée ou indisponible, la liste est triée depuis le centre de la rade et une phrase le dit. Un clic sur une ligne centre la carte et ouvre la fiche.
+
 ## Ouvrir en local
 
 Ouvrir `index.html` par un double-clic ne marche pas : la page charge `../commun/data/zones.geojson` avec `fetch`, et les navigateurs bloquent ça quand l'adresse commence par `file://`. Il faut un petit serveur local, lancé à la RACINE du dépôt (pour que `site/`, `app/` et `commun/` soient servis ensemble et partagent leurs données) :

@@ -10,6 +10,8 @@
  * Sprint 2 (US21)   : signaler une zone sale : position GPS ou point touché sur
  *                     la carte, photo réduite, type et quantité, enregistrement
  *                     dans la couche de données, puis le rond rouge apparaît.
+ * Sprint 3 (US3)    : liste des zones rouges, de la plus proche à la plus loin
+ *                     (distance à vol d'oiseau depuis la position de la personne).
  *
  * Pas de framework ni d'étape de build : du JavaScript classique chargé par
  * des balises <script> dans index.html. Leaflet (variable globale « L ») et
@@ -492,7 +494,128 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 9. Compteur et petits utilitaires                                   */
+  /* 9. [S3][US3] Liste des zones rouges, de la plus proche à la plus loin */
+  /* ------------------------------------------------------------------ */
+
+  var elPanneauListe  = $('panneau-liste');
+  var elListeZones    = $('liste-zones');
+  var elListeCompteur = $('liste-compteur');
+  var elListeOrigine  = $('liste-origine');
+
+  $('bouton-liste').addEventListener('click', ouvrirListe);
+
+  /**
+   * Ouvre la liste tout de suite (avec un texte d'attente), demande la
+   * position, puis remplit les lignes. Sans position (refus, délai dépassé,
+   * navigateur sans géolocalisation), on trie depuis le centre de la rade et
+   * on le dit en une phrase.
+   */
+  function ouvrirListe() {
+    elListeZones.innerHTML = '';
+    elListeCompteur.textContent = compterRouges();
+    elListeOrigine.textContent = 'Recherche de votre position...';
+    ouvrirPanneau(elPanneauListe);
+    obtenirOrigine().then(function (origine) {
+      if (elPanneauListe.hidden) { return; } // fermée entre-temps
+      remplirListe(origine);
+    });
+  }
+
+  /** Promesse de { latlng, connue } : la position de la personne, sinon le centre de la rade. */
+  function obtenirOrigine() {
+    return localiser()
+      .then(function (latlng) { return { latlng: latlng, connue: true }; })
+      .catch(function () {
+        if (positionUtilisateur) { return { latlng: positionUtilisateur, connue: true }; }
+        return { latlng: L.latLng(CENTRE_RADE), connue: false };
+      });
+  }
+
+  function remplirListe(origine) {
+    var lignes = zones
+      .filter(function (z) { return z.etat === 'rouge'; })
+      .map(function (z) {
+        return { zone: z, distance: distanceKm(origine.latlng, L.latLng(z.lat, z.lon)) };
+      })
+      .sort(function (a, b) { return a.distance - b.distance; });
+
+    elListeCompteur.textContent = compterRouges();
+    elListeOrigine.textContent = origine.connue
+      ? 'Distances à vol d\'oiseau depuis votre position.'
+      : 'Position inconnue : distances depuis le centre de la rade.';
+
+    elListeZones.innerHTML = '';
+    if (!lignes.length) {
+      var vide = document.createElement('li');
+      vide.className = 'liste-vide';
+      vide.textContent = 'Aucune zone rouge pour l\'instant. Bravo, ou signalez-en une.';
+      elListeZones.appendChild(vide);
+      return;
+    }
+    lignes.forEach(function (ligne) {
+      elListeZones.appendChild(creerLigneZone(ligne.zone, ligne.distance));
+    });
+  }
+
+  /** Une ligne de la liste : nom, commune, type, quantité, distance. Un clic ouvre la fiche. */
+  function creerLigneZone(zone, distance) {
+    var li = document.createElement('li');
+    var bouton = document.createElement('button');
+    bouton.type = 'button';
+    bouton.className = 'ligne-zone';
+
+    var texte = document.createElement('span');
+    var nom = document.createElement('strong');
+    nom.textContent = zone.nom || 'Zone sans nom';
+    var detail = document.createElement('span');
+    detail.className = 'ligne-detail';
+    detail.textContent = [zone.commune, majusculeInitiale(zone.type), zone.quantite]
+      .filter(Boolean).join(' · ');
+    texte.appendChild(nom);
+    texte.appendChild(detail);
+
+    var badge = document.createElement('span');
+    badge.className = 'distance';
+    badge.textContent = formaterDistance(distance);
+
+    bouton.appendChild(texte);
+    bouton.appendChild(badge);
+    bouton.addEventListener('click', function () {
+      recentrerSur(L.latLng(zone.lat, zone.lon), Math.max(carte.getZoom(), ZOOM_AUTOUR_DE_MOI));
+      ouvrirFiche(zone);
+    });
+    li.appendChild(bouton);
+    return li;
+  }
+
+  /** « 9 zones rouges », « 1 zone rouge » ou « Aucune zone rouge ». */
+  function compterRouges() {
+    var nombre = zones.filter(function (z) { return z.etat === 'rouge'; }).length;
+    if (nombre === 0) { return 'Aucune zone rouge'; }
+    return nombre + (nombre === 1 ? ' zone rouge' : ' zones rouges');
+  }
+
+  /** Distance à vol d'oiseau entre deux points (formule de haversine), en km. */
+  function distanceKm(a, b) {
+    var RAYON_TERRE_KM = 6371;
+    var dLat = enRadians(b.lat - a.lat);
+    var dLon = enRadians(b.lng - a.lng);
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(enRadians(a.lat)) * Math.cos(enRadians(b.lat)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * RAYON_TERRE_KM * Math.asin(Math.sqrt(h));
+  }
+
+  function enRadians(degres) { return degres * Math.PI / 180; }
+
+  /** « 350 m » sous 1 km, sinon « 2,4 km ». */
+  function formaterDistance(km) {
+    if (km < 1) { return Math.round(km * 1000) + ' m'; }
+    return km.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' km';
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 10. Compteur et petits utilitaires                                  */
   /* ------------------------------------------------------------------ */
 
   /**
