@@ -24,6 +24,9 @@ Règle prévue (étape 6) : sprint volontairement plus léger, garder 20 min pou
 | US10 – Publier l'avant/après | 3 | `s4/us10-publier` | terminé | `e8c3213`, fusion `60a31d7` |
 | US11 – La zone passe au vert | 1 | `s4/us11-zone-verte` | terminé | `4f38c63`, fusion `e2c2fba` |
 | Exemple de publication dans le feed (démo) | 0 | `s4/us10-feed-demo` | terminé | `2952a82`, fusion `6c0e29b` |
+| Charte : logo officiel et slogan | 0 | `s4/charte-logo` | terminé | `455b334`, fusion `cbc03a2` |
+| Lien vers le site de l'équipe (`site/` = copie) | 0 | `s4/site-equipe` | terminé | `1f5d6d2`, fusion `92f5c88` |
+| Logo en PNG fond transparent dans l'entête | 0 | `s4/logo-png` | terminé | `b626bdb`, fusion `59b02f6` |
 
 États possibles : à faire, en cours, terminé (testé, montrable, fusionné sur main).
 
@@ -36,7 +39,7 @@ Décisions prises pendant le sprint :
 - Bouton « Réinitialiser la démo » dans l'onglet Moi, visible seulement en mode local, pour rejouer la démo en revue.
 - US16 (minuteur 10 min) et US8 (état orange) restent hors MVP, notés comme suite sur le Miro.
 
-- Logo officiel de l'équipe (Z et vague, `commun/img/logo.png`, PNG fond transparent) et slogan « Pas de planète B, mais une génération Z. » repris dans l'app et l'accueil (branche `s4/charte-logo`).
+- Logo officiel de l'équipe (Z et vague, `commun/img/logo.png`, PNG fond transparent) et slogan « Pas de planète B, mais une génération Z. » repris dans l'app et l'accueil (branches `s4/charte-logo` puis `s4/logo-png` pour passer du SVG redessiné au vrai logo en PNG).
 
 - Le dossier `site/` devient une copie du site de l'équipe (dépôt generation-zero-dechet, `sprint4/`) : l'app renvoie vers leur carte, pas vers un second site. Limite : leur site stocke en IndexedDB, l'app en localStorage, le rapprochement est à faire ensemble.
 

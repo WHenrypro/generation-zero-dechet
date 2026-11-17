@@ -9,7 +9,7 @@ Même rôle que le cadre « TP · Suivi » du Miro. À remplir à la fin de chaq
 | 1 | Une URL publique affiche l'appli avec les zones de démo en base | 10 | 10 | `sprint-1` (`4308647`) | `site/` : carte et 15 zones | |
 | 2 | Marc peut signaler une zone sale et elle apparaît sur la carte | 11 | 11 | `sprint-2` (`786f3c6`) | `site/` : signalement, compteur | |
 | 3 | Léa se connecte, repère une zone rouge et décide d'y aller | 10 | 10 | `sprint-3` (`aaee070`) | `site/` liste et fiche, `app/` pseudo et « J'y vais » | |
-| 4 | Léa prouve son action et la zone passe au vert, démo complète | 9 | 9 | `sprint-4` (`e2c2fba`) | `app/` photos, feed, zone verte | |
+| 4 | Léa prouve son action et la zone passe au vert, démo complète | 9 | 9 | `sprint-4` (`59b02f6`) | `app/` photos, feed, zone verte, logo, lien vers le site de l'équipe | |
 
 Hypothèse de départ : 10 points par sprint (étape 6 du TD1). Les colonnes « Terminé » reflètent l'état du dépôt (tout fusionné sur `main`) ; l'équipe les confirme ou les corrige en revue, et déplace les tags si besoin (`git tag -f`).
 
@@ -33,4 +33,6 @@ Hypothèse de départ : 10 points par sprint (étape 6 du TD1). Les colonnes « 
 | Sprint 4 | Planning | US8 (orange) et US16 (minuteur) restent hors MVP | 13 Must d'abord, le reste est décrit sur le Miro | PO |
 | Sprint 4 | Réalisation | Une publication exemple dans le feed au premier lancement | Démo et revue croisée lisibles, pas d'écran vide | Léane |
 | Sprint 4 | Réalisation | Logo officiel (Z et vague) et slogan « Pas de planète B, mais une génération Z. » dans l'app et l'accueil | Même identité que le site de l'équipe | Léane |
+| Sprint 4 | Réalisation | L'app renvoie vers le site de l'équipe (`site/` = copie de leur sprint 4), notre site retiré | Un seul site, celui de l'équipe ; limite IndexedDB / localStorage notée | Léane |
+| Après le TP | Suivi | App poussée sur le dépôt GitHub de l'équipe (branche `mvp`, tags, PR #1 app par sprint) | Un seul dépôt pour le livrable | Léane |
 | | | | | |
