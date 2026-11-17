@@ -1,5 +1,5 @@
 # Clés et secrets
-app/js/config.js
+commun/js/config.js
 .env
 .env.*
 

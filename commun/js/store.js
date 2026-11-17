@@ -3,12 +3,13 @@
  * =====================================
  * [S2][US2] Un seul endroit pour lire et écrire les zones et les publications.
  *
+ * Partagée par le site (site/) et l'app (app/) : même stockage, mêmes données.
  * Deux modes, choisis automatiquement au chargement :
- *   - « local »    : pas de js/config.js (ou clés vides). Les données vivent
+ *   - « local »    : pas de commun/js/config.js (ou clés vides). Les données vivent
  *                    dans le localStorage du navigateur, initialisées depuis
- *                    data/zones.geojson. C'est le mode de la démo du TP : ça
+ *                    commun/data/zones.geojson. C'est le mode de la démo du TP : ça
  *                    marche sans compte ni serveur, chaque navigateur a sa copie.
- *   - « supabase » : js/config.js renseigne SUPABASE_URL et SUPABASE_ANON_KEY.
+ *   - « supabase » : commun/js/config.js renseigne SUPABASE_URL et SUPABASE_ANON_KEY.
  *                    On parle à l'API REST de Supabase (PostgREST pour les
  *                    tables, Storage pour les photos) avec fetch, sans
  *                    bibliothèque. Ce mode n'a pas pu être testé sans projet
@@ -27,7 +28,7 @@
   'use strict';
   window.GZD = window.GZD || {};
 
-  var URL_GEOJSON = 'data/zones.geojson';
+  var URL_GEOJSON = '../commun/data/zones.geojson'; // vu depuis site/ ou app/
   var CLE_ZONES = 'gzd.zones';
   var CLE_PUBLICATIONS = 'gzd.publications';
   var BUCKET_PHOTOS = 'photos';
@@ -35,7 +36,7 @@
     'lat', 'lon', 'description', 'signale_le', 'photo_url'];
   var COLONNES_PUBLICATION = ['zone_id', 'pseudo', 'photo_avant_url', 'photo_apres_url', 'publie_le'];
 
-  // js/config.js, s'il existe, déclare ces deux variables globales.
+  // commun/js/config.js, s'il existe, déclare ces deux variables globales.
   var config = {
     url: (typeof SUPABASE_URL === 'string') ? SUPABASE_URL.replace(/\/+$/, '') : '',
     cle: (typeof SUPABASE_ANON_KEY === 'string') ? SUPABASE_ANON_KEY : ''

@@ -69,6 +69,13 @@ body {
   letter-spacing: 0.2px;
 }
 
+.bandeau .sous-titre {
+  margin-left: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
 .compteur {
   margin: 0;
   padding: 6px 12px;

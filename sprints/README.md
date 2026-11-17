@@ -27,4 +27,5 @@ Hypothèse de départ : 10 points par sprint (étape 6 du TD1). Première vraie 
 |---|---|---|---|---|
 | Avant le TP | Planning | Vélocité de départ fixée à 10 points par sprint | 4 devs × 2 h, US11 = 1 point ≈ 40 min | Équipe |
 | Avant le TP | Planning | US21 (8 pts) se découpe en A puis B si le sprint 2 déborde | Plus grosse story, dans le sprint le plus chargé | PO |
+| Sprint 2 | Planning | Le MVP se découpe en un site (carte interactive, signalement : `site/`) et une app (concept BeReal, avant/après, feed : `app/`), mêmes données (`commun/`), liens dans les deux sens | Deux usages : Marc signale depuis la carte, Léa ramasse et poste depuis son téléphone | Équipe |
 | | | | | |
