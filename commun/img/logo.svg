@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Logo Génération Z(éro déchet)">
+  <circle cx="100" cy="100" r="88" fill="#f4f6f4" stroke="#1f3141" stroke-width="12"/>
+  <path d="M60 50 H140 L66 122 H140" fill="none" stroke="#1f3141" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 146 c9 -11 18 -11 27 0 s18 11 27 0 s18 -11 27 0 s18 11 27 0" fill="none" stroke="#4f86f5" stroke-width="15" stroke-linecap="round"/>
+</svg>

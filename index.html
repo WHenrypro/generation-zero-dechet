@@ -13,7 +13,8 @@
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; font-family: 'DM Sans', Arial, sans-serif; color: var(--ink); background: var(--bg); }
     .top { background: #123c39; color: #fff; padding: 16px 22px; display: flex; align-items: center; gap: 13px; }
-    .logo { background: #bde4ad; color: #174b37; font-family: Outfit, sans-serif; font-weight: 800; border-radius: 15px; padding: 12px; font-size: 20px; }
+    .logo { width: 48px; height: 48px; border-radius: 50%; background: #f4f6f4; }
+    .top .eco { color: #bde4ad; font-weight: 600; }
     .top h1 { font-family: Outfit, sans-serif; font-size: 23px; margin: 0; }
     .top p { margin: 2px 0 0; color: #bcd2cd; font-size: 12px; }
     main { max-width: 900px; margin: 0 auto; padding: 36px 16px 48px; }
@@ -34,10 +35,10 @@
 </head>
 <body>
   <header class="top">
-    <div class="logo">GZ</div>
+    <img class="logo" src="commun/img/logo.svg" alt="" width="48" height="48">
     <div>
-      <h1>Génération Z(éro déchet)</h1>
-      <p>Ensemble, rendons la rade plus propre.</p>
+      <h1>Génération Z <span class="eco">(éro déchet)</span></h1>
+      <p>« Pas de planète B, mais une génération Z. »</p>
     </div>
   </header>
   <main>
