@@ -4,9 +4,9 @@ Fiche remise avec le document TD1, TD2, TP1 et la réflexion. Elle dit où tourn
 
 ## Où le voir
 
-URL publique prévue : https://whenrypro.github.io/generation-zero-dechet/sprint4/index.html (site) et https://whenrypro.github.io/generation-zero-dechet/sprint4/app/index.html (app).
+URL publique : https://whenrypro.github.io/generation-zero-dechet/sprint4/index.html (site) et https://whenrypro.github.io/generation-zero-dechet/sprint4/app/index.html (app). Accueil du dépôt publié : https://whenrypro.github.io/generation-zero-dechet/.
 
-Au 17 novembre 2026 cette adresse répond encore 404 : GitHub Pages n'est pas activé sur le dépôt. William, propriétaire du dépôt, doit le faire une fois : Settings, puis Pages, Source « Deploy from a branch », branche `main`, dossier `/ (root)`, Save. Le site est en ligne deux ou trois minutes plus tard. Tous les chemins du code sont relatifs, rien n'est à changer pour que ça marche dans ce sous-dossier.
+GitHub Pages est activé depuis le 17 novembre 2026 (fait par William, propriétaire du dépôt, branche `main`, dossier racine). Vérifié le même jour en fin d'après-midi : le site se charge et annonce « Supabase connecté » avec les 16 zones de la base, l'app démarre en mode Supabase et son feed liste les publications réelles. Tous les chemins du code sont relatifs, rien n'est à changer pour que ça marche dans ce sous-dossier.
 
 Code source : https://github.com/WHenrypro/generation-zero-dechet (dépôt de l'équipe, dossiers `sprint1` à `sprint4`, l'app dans `sprint3/app` et `sprint4/app`). L'historique complet de l'app, avec une branche par story et un tag par sprint, est sur la branche `mvp` du même dépôt. La PR qui a rangé l'app par sprint : https://github.com/WHenrypro/generation-zero-dechet/pull/1 (fusionnée).
 
