@@ -1,0 +1,2 @@
+var SUPABASE_URL = 'https://tsbnpfxurnavgidaccyw.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzYm5wZnh1cm5hdmdpZGFjY3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5MjAwOTIsImV4cCI6MjExMDQ5NjA5Mn0.QB1C_ajByosIlC7aYy9aSTT9A30_Pg7iNO00FCDhyvg';
