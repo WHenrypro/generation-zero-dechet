@@ -1,12 +1,12 @@
-# Géné Z(éro) Déchet, le site : la carte interactive
+# Génération Z(éro déchet), le site : la carte interactive
 
 Une page web statique : la carte de la rade de Brest (Leaflet + OpenStreetMap) avec les zones de démo, une légende, un compteur et une fiche par zone. Pas de framework, pas de build. Les fichiers se déploient tels quels.
 
 ## Ce qu'il y a dans le dossier
 
-- `index.html` : la page (bandeau, carte, légende, fiche d'une zone).
+- `index.html` : la page (bandeau, carte, légende, fiche d'une zone, liste des zones rouges, formulaire de signalement).
 - Le code partagé avec l'app est dans `../commun/` (store.js, données de démo, config Supabase).
-- `css/style.css` : les styles, mobile d'abord.
+- `css/style.css` : les styles, mobile d'abord. Charte alignée sur le site de l'équipe (dépôt generation-zero-dechet) : polices DM Sans et Outfit (Google Fonts), vert `#167e66` en accent, variables CSS en tête de fichier.
 - `js/site.js` : chargement des zones, ronds colorés, fiche, compteur, géolocalisation, signalement d'une zone. Commenté en français.
 
 ## Signaler une zone (US21)
@@ -18,6 +18,10 @@ En mode local, tout reste dans le localStorage du navigateur (clé `gzd.zones`),
 ## Zones à nettoyer, de la plus proche à la plus loin (US3)
 
 Le bouton « Zones à nettoyer » (à droite, sous « Autour de moi ») ouvre la liste des zones rouges triées par distance à vol d'oiseau (formule de haversine) depuis la position de la personne. Si la géolocalisation est refusée ou indisponible, la liste est triée depuis le centre de la rade et une phrase le dit. Un clic sur une ligne centre la carte et ouvre la fiche.
+
+## Fiche d'une zone (US4)
+
+La fiche montre la photo du signalement quand il y en a une (sinon le visuel de remplacement), le badge d'état (À nettoyer, En cours, Nettoyée), le type, la quantité, la date, la description, et la distance depuis la personne si sa position est connue (après « Autour de moi » ou « Zones à nettoyer »). Pour une zone verte, elle ajoute la dernière publication faite depuis l'app (`GZD.store.chargerPublications()`, filtrée sur `zone_id`) : « Nettoyée par Léa le 17 nov. 2026 », photo avant, photo après. S'il n'y a pas de publication, rien ne s'affiche.
 
 ## Ouvrir en local
 

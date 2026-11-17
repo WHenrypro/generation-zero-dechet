@@ -1,6 +1,6 @@
 /*
- * Géné Z(éro) Déchet, le site : la carte interactive de la rade
- * ============================================================
+ * Génération Z(éro déchet), le site : la carte interactive de la rade
+ * ==================================================================
  *
  * Sprint 1 (T1, T3) : carte Leaflet de la rade, ronds colorés par état,
  *                     fiche d'une zone, compteur.
@@ -12,6 +12,8 @@
  *                     dans la couche de données, puis le rond rouge apparaît.
  * Sprint 3 (US3)    : liste des zones rouges, de la plus proche à la plus loin
  *                     (distance à vol d'oiseau depuis la position de la personne).
+ * Sprint 3 (US4)    : fiche complète : photo du signalement, distance, et pour
+ *                     une zone nettoyée l'avant / après publié depuis l'app.
  *
  * Pas de framework ni d'étape de build : du JavaScript classique chargé par
  * des balises <script> dans index.html. Leaflet (variable globale « L ») et
@@ -32,14 +34,14 @@
   // Couleur du rond et libellé affiché pour chaque état d'une zone.
   // Les couleurs doivent rester cohérentes avec la légende (css/style.css).
   var ETATS = {
-    rouge:  { couleur: '#D64545', libelle: 'À nettoyer' },
-    orange: { couleur: '#F28C28', libelle: 'Ramassage en cours' },
-    vert:   { couleur: '#2E9E5B', libelle: 'Nettoyée' }
+    rouge:  { couleur: '#d65752', libelle: 'À nettoyer' },
+    orange: { couleur: '#e69a38', libelle: 'En cours' },
+    vert:   { couleur: '#239b65', libelle: 'Nettoyée' }
   };
-  var ETAT_INCONNU = { couleur: '#64748B', libelle: 'État inconnu' };
+  var ETAT_INCONNU = { couleur: '#657a78', libelle: 'État inconnu' };
 
-  // Style du rond sélectionné : un peu plus gros, liseré bleu foncé.
-  var STYLE_SELECTION = { radius: 13, color: '#0F4F8F', weight: 3 };
+  // Style du rond sélectionné : un peu plus gros, liseré vert foncé.
+  var STYLE_SELECTION = { radius: 14, color: '#123c39', weight: 3 };
 
   /* ------------------------------------------------------------------ */
   /* 2. État de l'application                                            */
@@ -120,9 +122,9 @@
   function styleDuRond(etat) {
     var info = ETATS[etat] || ETAT_INCONNU;
     return {
-      radius: 10,
+      radius: 11,
       fillColor: info.couleur,
-      fillOpacity: 0.9,
+      fillOpacity: 0.95,
       color: '#FFFFFF',
       weight: 2,
       bubblingMouseEvents: false
@@ -203,8 +205,82 @@
     $('fiche-date').textContent = formaterDate(zone.signale_le);
     $('fiche-description').textContent = zone.description || '';
 
+    // [S3][US4] Photo du signalement, distance et avant / après.
+    afficherPhotoFiche(zone.photo_url);
+    afficherDistanceFiche(zone);
+    afficherPublicationFiche(zone);
+
     ouvrirPanneau(elFiche);
     recentrerSur(L.latLng(zone.lat, zone.lon));
+  }
+
+  /** La photo du signalement si elle existe, sinon le visuel de remplacement (SVG). */
+  function afficherPhotoFiche(url) {
+    var img = $('fiche-photo-img');
+    var svg = $('fiche-photo-svg');
+    if (url) {
+      img.src = url;
+      img.hidden = false;
+      svg.setAttribute('hidden', '');
+    } else {
+      img.removeAttribute('src');
+      img.hidden = true;
+      svg.removeAttribute('hidden');
+    }
+  }
+
+  /** La distance à vol d'oiseau depuis la personne, si sa position est connue. */
+  function afficherDistanceFiche(zone) {
+    var connue = !!positionUtilisateur;
+    Array.prototype.forEach.call(document.querySelectorAll('.fiche-ligne-distance'), function (el) {
+      el.hidden = !connue;
+    });
+    if (connue) {
+      var km = distanceKm(positionUtilisateur, L.latLng(zone.lat, zone.lon));
+      $('fiche-distance').textContent = formaterDistance(km) + ' à vol d\'oiseau';
+    }
+  }
+
+  /**
+   * Pour une zone nettoyée : la publication la plus récente faite depuis l'app
+   * (photo avant, photo après, pseudo, date). Rien à afficher s'il n'y en a pas.
+   */
+  function afficherPublicationFiche(zone) {
+    $('fiche-publication').hidden = true;
+    if (zone.etat !== 'vert') { return; }
+    store.chargerPublications()
+      .then(function (publications) {
+        if (zoneOuverte !== zone) { return; } // une autre fiche s'est ouverte entre-temps
+        var liees = (publications || []).filter(function (p) { return p.zone_id === zone.id; });
+        if (!liees.length) { return; }
+        liees.sort(function (a, b) {
+          return (Date.parse(b.publie_le) || 0) - (Date.parse(a.publie_le) || 0);
+        });
+        remplirPublication(liees[0]);
+      })
+      .catch(function (erreur) { console.warn('Publications indisponibles :', erreur); });
+  }
+
+  /** « Nettoyée par Léa le 17 nov. 2026 », photo avant et photo après. */
+  function remplirPublication(publication) {
+    var texte = 'Nettoyée';
+    if (publication.pseudo) { texte += ' par ' + publication.pseudo; }
+    if (publication.publie_le) { texte += ' le ' + formaterDateCourte(publication.publie_le); }
+    $('fiche-publication-texte').textContent = texte;
+    remplirImage($('fiche-photo-avant'), publication.photo_avant_url);
+    remplirImage($('fiche-photo-apres'), publication.photo_apres_url);
+    $('fiche-publication').hidden = false;
+  }
+
+  /** Affiche l'image si on a une URL, sinon cache toute la figure (image et légende). */
+  function remplirImage(img, url) {
+    if (url) {
+      img.src = url;
+      img.parentNode.hidden = false;
+    } else {
+      img.removeAttribute('src');
+      img.parentNode.hidden = true;
+    }
   }
 
   /**
@@ -255,7 +331,7 @@
         positionUtilisateur = L.latLng(position.coords.latitude, position.coords.longitude);
         if (!marqueurPosition) {
           marqueurPosition = L.circleMarker(positionUtilisateur, {
-            radius: 8, fillColor: '#1B6FB8', fillOpacity: 1, color: '#FFFFFF', weight: 3,
+            radius: 8, fillColor: '#167e66', fillOpacity: 1, color: '#FFFFFF', weight: 3,
             bubblingMouseEvents: false
           }).bindTooltip('Vous êtes ici').addTo(carte);
         } else {
@@ -296,7 +372,7 @@
 
   // Rond provisoire : rouge un peu transparent, liseré blanc en pointillés.
   var STYLE_BROUILLON = {
-    radius: 10, fillColor: ETATS.rouge.couleur, fillOpacity: 0.6,
+    radius: 11, fillColor: ETATS.rouge.couleur, fillOpacity: 0.6,
     color: '#FFFFFF', weight: 2, dashArray: '4 3', bubblingMouseEvents: false
   };
 
@@ -634,6 +710,13 @@
     var date = new Date(iso);
     if (isNaN(date.getTime())) { return iso; }
     return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  /** « 2026-11-17T15:20:00Z » devient « 17 nov. 2026 » (forme courte pour la fiche). */
+  function formaterDateCourte(iso) {
+    var date = new Date(iso);
+    if (isNaN(date.getTime())) { return iso; }
+    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
   /** « plusieurs sacs » devient « Plusieurs sacs ». */

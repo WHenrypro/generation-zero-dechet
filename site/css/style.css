@@ -1,28 +1,41 @@
 /*
- * Géné Z(éro) Déchet, feuille de style (Sprint 1)
+ * Génération Z(éro déchet), feuille de style du site (la carte)
  * Mobile d'abord : les règles de base visent un téléphone, le bloc
  * @media (min-width: 768px) en bas adapte pour tablette et ordinateur.
+ * Charte alignée sur le site de l'équipe (dépôt generation-zero-dechet) :
+ * polices DM Sans (texte) et Outfit (titres), vert #167e66 en accent.
  */
 
-/* Palette de l'appli (variables CSS réutilisées partout) */
+/* Palette de la charte (variables CSS réutilisées partout) */
 :root {
-  --vert: #2E9E5B;
-  --vert-clair: #8FE07A;
-  --bleu: #1B6FB8;
-  --bleu-fonce: #0F4F8F;
+  --ink: #173334;      /* texte */
+  --muted: #657a78;    /* texte secondaire */
+  --green: #167e66;    /* boutons principaux, accent */
+  --pale: #e7f4ed;
+  --border: #d9e6df;
+  --bg: #f4f7f4;
+  --red: #d65c55;
+  --orange: #ec9a3d;
+  --shadow: 0 14px 40px rgba(22, 57, 48, 0.09);
 
-  /* Couleurs des états d'une zone (les mêmes que dans js/app.js) */
-  --etat-rouge: #D64545;
-  --etat-orange: #F28C28;
-  --etat-vert: #2E9E5B;
-  --etat-inconnu: #64748B;
+  /* Anciens noms, gardés pour les règles existantes et redirigés vers la charte */
+  --vert: var(--green);
+  --vert-clair: #bde4ad;
+  --bleu: var(--green);
+  --bleu-fonce: #123c39;
 
-  --texte: #1F2937;
-  --texte-doux: #64748B;
-  --fond-clair: #F1F5F9;
+  /* Couleurs des ronds sur la carte (les mêmes que dans js/site.js) */
+  --etat-rouge: #d65752;
+  --etat-orange: #e69a38;
+  --etat-vert: #239b65;
+  --etat-inconnu: #657a78;
+
+  --texte: var(--ink);
+  --texte-doux: var(--muted);
+  --fond-clair: var(--bg);
   --blanc: #FFFFFF;
-  --ombre: 0 4px 16px rgba(15, 79, 143, 0.25);
-  --rayon: 14px;
+  --ombre: var(--shadow);
+  --rayon: 19px;
 }
 
 * {
@@ -47,9 +60,13 @@ body {
   height: 100vh;
   height: 100dvh; /* tient compte des barres du navigateur mobile */
   overflow: hidden;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--texte);
   background: var(--fond-clair);
+}
+
+h1, h2, h3 {
+  font-family: "Outfit", "DM Sans", system-ui, sans-serif;
 }
 
 /* ---------- Bandeau du haut ---------- */
@@ -58,35 +75,61 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   min-height: 56px;
   padding: 8px 16px;
-  background: linear-gradient(90deg, var(--bleu-fonce), var(--bleu));
+  background: #123c39;
   color: var(--blanc);
-  box-shadow: 0 2px 8px rgba(15, 79, 143, 0.3);
+  box-shadow: 0 2px 8px rgba(18, 60, 57, 0.3);
   z-index: 1100; /* au-dessus de la carte Leaflet */
+}
+
+/* Logo carré « GZ » avant le titre */
+.logo {
+  flex-shrink: 0;
+  padding: 12px;
+  border-radius: 15px;
+  background: #bde4ad;
+  color: #174b37;
+  font-family: "Outfit", "DM Sans", system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.bandeau-titre {
+  flex: 1;
+  min-width: 0;
 }
 
 .bandeau h1 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: 0.2px;
+  line-height: 1.2;
 }
 
 .bandeau .sous-titre {
-  margin-left: 6px;
-  font-size: 0.8rem;
+  display: block; /* sous le titre sur mobile, à côté sur grand écran */
+  color: #bcd2cd;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 12px;
   font-weight: 500;
-  opacity: 0.85;
+}
+
+.slogan {
+  display: none; /* visible sur grand écran seulement */
+  margin: 2px 0 0;
+  color: #bcd2cd;
+  font-size: 12px;
 }
 
 .compteur {
   margin: 0;
   padding: 6px 12px;
   border-radius: 999px;
-  background: var(--vert);
+  background: var(--green);
   color: var(--blanc);
   font-size: 0.9rem;
   white-space: nowrap;
@@ -122,10 +165,21 @@ main {
   bottom: 28px;
   z-index: 800;
   padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
   box-shadow: var(--ombre);
   font-size: 0.85rem;
+  max-width: 50vw; /* laisse la place au bouton « Signaler » sur mobile */
+}
+
+/* Mention en bas de la légende */
+.mention {
+  margin: 8px 0 0;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
 }
 
 .legende ul {
@@ -169,10 +223,11 @@ main {
 
 .bouton-carte {
   padding: 9px 12px;
-  border: 0;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--bleu-fonce);
+  background: var(--blanc);
+  color: var(--ink);
+  font: inherit;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -180,7 +235,8 @@ main {
 }
 
 .bouton-carte:hover {
-  background: var(--blanc);
+  border-color: #75b5a0;
+  background: #f3faf6;
 }
 
 /* ---------- Message d'erreur ---------- */
@@ -192,10 +248,10 @@ main {
   right: 60px; /* laisse la place aux boutons de zoom de Leaflet, à droite */
   z-index: 950;
   padding: 10px 14px;
-  border-left: 4px solid var(--etat-orange);
-  border-radius: 8px;
-  background: #FFF3CD;
-  color: #7A4B00;
+  border-left: 4px solid var(--orange);
+  border-radius: 12px;
+  background: #fff3e4;
+  color: #9c611c;
   box-shadow: var(--ombre);
   font-size: 0.9rem;
 }
@@ -212,9 +268,11 @@ main {
   max-height: 62%;
   overflow-y: auto;
   padding: 16px 16px 20px;
+  border: 1px solid var(--border);
+  border-bottom: 0;
   border-radius: var(--rayon) var(--rayon) 0 0;
   background: var(--blanc);
-  box-shadow: 0 -4px 20px rgba(15, 79, 143, 0.25);
+  box-shadow: var(--shadow), 0 -4px 20px rgba(22, 57, 48, 0.12);
 }
 
 .panneau[hidden] {
@@ -260,20 +318,21 @@ main {
   margin: 0 0 10px;
 }
 
+/* Pastilles d'état : fond pâle, texte foncé de la même teinte */
 .badge {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  color: var(--blanc);
-  font-size: 0.8rem;
-  font-weight: 600;
-  background: var(--etat-inconnu);
+  padding: 5px 9px;
+  border-radius: 100px;
+  background: var(--pale);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.badge-rouge   { background: var(--etat-rouge); }
-.badge-orange  { background: var(--etat-orange); }
-.badge-vert    { background: var(--etat-vert); }
-.badge-inconnu { background: var(--etat-inconnu); }
+.badge-rouge   { background: #fbe9e7; color: #ae3e3a; }
+.badge-orange  { background: #fff0d9; color: #9e5d09; }
+.badge-vert    { background: #def4e7; color: #17764c; }
+.badge-inconnu { background: #e9eeec; color: var(--muted); }
 
 .fiche-details {
   display: grid;
@@ -301,22 +360,23 @@ main {
 .bouton-principal {
   display: block;
   width: 100%;
-  padding: 14px;
+  padding: 11px 15px;
   border: 0;
   border-radius: 12px;
-  background: var(--vert);
+  background: var(--green);
   color: var(--blanc);
+  font: inherit;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
 }
 
 .bouton-principal:hover:not(:disabled) {
-  background: #27874E;
+  filter: brightness(0.94);
 }
 
 .bouton-principal:disabled {
-  background: #A9B4C2;
+  opacity: 0.48;
   cursor: not-allowed;
 }
 
@@ -329,25 +389,43 @@ main {
   font-weight: 600;
 }
 
+/* Encart d'aide : fond vert pâle, texte vert foncé */
 .aide {
   margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #eaf5ef;
+  color: #286650;
   text-align: center;
-  color: var(--texte-doux);
   font-size: 0.8rem;
 }
 
 .noscript {
   margin: 16px;
   padding: 12px;
-  background: #FFF3CD;
-  border-radius: 8px;
+  background: #fff3e4;
+  color: #9c611c;
+  border-radius: 12px;
 }
 
 /* ---------- Tablette et ordinateur ---------- */
 
 @media (min-width: 768px) {
   .bandeau h1 {
-    font-size: 1.35rem;
+    font-size: 23px;
+  }
+
+  .bandeau .sous-titre {
+    display: inline;
+    margin-left: 6px;
+  }
+
+  .legende {
+    max-width: none;
+  }
+
+  .slogan {
+    display: block;
   }
 
   /* Le panneau se place à gauche au lieu de monter depuis le bas */
@@ -358,7 +436,9 @@ main {
     bottom: 16px;
     width: 380px;
     max-height: none;
+    border-bottom: 1px solid var(--border);
     border-radius: var(--rayon);
+    box-shadow: var(--shadow);
   }
 
   /* La légende passe à droite pour ne pas être recouverte par le panneau */
@@ -383,19 +463,20 @@ main {
   right: 12px;
   bottom: 28px;
   z-index: 850;
-  padding: 14px 18px;
+  padding: 11px 15px;
   border: 0;
-  border-radius: 999px;
-  background: var(--etat-rouge);
+  border-radius: 12px;
+  background: var(--green);
   color: var(--blanc);
+  font: inherit;
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(214, 69, 69, 0.45);
+  box-shadow: var(--shadow);
 }
 
 .fab:hover {
-  background: #BE3A3A;
+  filter: brightness(0.94);
 }
 
 /* Bandeau affiché pendant le choix du point sur la carte */
@@ -410,8 +491,8 @@ main {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 14px;
-  border-radius: 8px;
-  background: var(--bleu-fonce);
+  border-radius: 12px;
+  background: #123c39;
   color: var(--blanc);
   font-size: 0.9rem;
   box-shadow: var(--ombre);
@@ -433,10 +514,10 @@ main {
   right: 60px;
   z-index: 960;
   padding: 10px 14px;
-  border-left: 4px solid var(--vert);
-  border-radius: 8px;
-  background: #E7F7EC;
-  color: #0F5A2E;
+  border-left: 4px solid var(--green);
+  border-radius: 12px;
+  background: #eaf5ef;
+  color: #286650;
   font-size: 0.9rem;
   box-shadow: var(--ombre);
 }
@@ -461,8 +542,8 @@ main {
   display: block;
   margin-bottom: 6px;
   padding: 0;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   color: var(--texte);
 }
 
@@ -475,8 +556,8 @@ main {
 .champ select,
 .champ textarea {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #CBD5E1;
+  padding: 10px;
+  border: 1px solid #d5e1dc;
   border-radius: 10px;
   background: var(--blanc);
   color: var(--texte);
@@ -501,19 +582,19 @@ main {
 
 .bouton-secondaire {
   flex: 1;
-  padding: 10px 12px;
-  border: 2px solid var(--bleu);
-  border-radius: 10px;
-  background: var(--blanc);
-  color: var(--bleu-fonce);
+  padding: 11px 15px;
+  border: 0;
+  border-radius: 12px;
+  background: #eef4f0;
+  color: var(--ink);
   font: inherit;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .bouton-secondaire:hover:not(:disabled) {
-  background: #EAF2FB;
+  filter: brightness(0.96);
 }
 
 .bouton-secondaire:disabled {
@@ -536,16 +617,16 @@ main {
 }
 
 .aide.ok {
-  color: var(--vert);
-  font-weight: 600;
+  color: #17764c;
+  font-weight: 700;
 }
 
 .erreur {
   margin: 0 0 12px;
   padding: 10px 12px;
-  border-radius: 8px;
-  background: #FDECEC;
-  color: #8A1C1C;
+  border-radius: 12px;
+  background: #fff3e4;
+  color: #9c611c;
   font-size: 0.9rem;
 }
 
@@ -607,10 +688,9 @@ main {
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #E2E8F0;
-  border-left: 4px solid var(--etat-rouge);
-  border-radius: 10px;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
   background: var(--blanc);
   color: var(--texte);
   font: inherit;
@@ -618,8 +698,10 @@ main {
   cursor: pointer;
 }
 
-.ligne-zone:hover {
-  background: #EAF2FB;
+.ligne-zone:hover,
+.ligne-zone:active {
+  border-color: #75b5a0;
+  background: #f3faf6;
 }
 
 .ligne-zone strong {
@@ -637,10 +719,10 @@ main {
 
 .distance {
   flex-shrink: 0;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: var(--fond-clair);
-  color: var(--bleu-fonce);
+  padding: 5px 9px;
+  border-radius: 100px;
+  background: var(--pale);
+  color: #17764c;
   font-size: 0.85rem;
   font-weight: 700;
   white-space: nowrap;
@@ -650,4 +732,55 @@ main {
   margin: 12px 0 0;
   color: var(--texte-doux);
   font-size: 0.95rem;
+}
+
+/* ---------- [S3][US4] Fiche complète : photo, distance, avant / après ---------- */
+
+.fiche-photo img {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: var(--fond-clair);
+}
+
+.fiche-publication {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #eaf5ef;
+}
+
+.fiche-publication-texte {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #286650;
+}
+
+.avant-apres {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.avant-apres figure {
+  margin: 0;
+}
+
+.avant-apres img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--fond-clair);
+}
+
+.avant-apres figcaption {
+  margin-top: 4px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--texte-doux);
 }
