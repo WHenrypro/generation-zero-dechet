@@ -29,6 +29,12 @@
   box-sizing: border-box;
 }
 
+/* L'attribut hidden doit toujours cacher l'élément, même quand une classe
+   lui donne display: flex ou block (bandeau de placement, aperçu photo...). */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;

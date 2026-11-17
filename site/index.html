@@ -25,7 +25,7 @@
   </header>
 
   <main>
-    <!-- La carte Leaflet se dessine dans cette div (voir js/app.js) -->
+    <!-- La carte Leaflet se dessine dans cette div (voir js/site.js) -->
     <div id="carte" aria-label="Carte de la rade de Brest"></div>
 
     <!-- Message d'erreur (ex. : données non chargées). Caché par défaut. -->
@@ -99,7 +99,7 @@
     </section>
 
     <!-- [S2][US21] Formulaire de signalement (Marc voit une zone sale) -->
-    <section id="panneau-signaler" class="panneau" aria-labelledby="signaler-titre" hidden>
+    <section id="panneau-signaler" class="panneau" aria-labelledby="signaler-titre" tabindex="-1" hidden>
       <button type="button" class="panneau-fermer" aria-label="Fermer le formulaire">&times;</button>
       <form id="form-signaler" novalidate>
         <h2 id="signaler-titre">Signaler une zone sale</h2>

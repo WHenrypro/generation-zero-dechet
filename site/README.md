@@ -7,7 +7,13 @@ Une page web statique : la carte de la rade de Brest (Leaflet + OpenStreetMap) a
 - `index.html` : la page (bandeau, carte, légende, fiche d'une zone).
 - Le code partagé avec l'app est dans `../commun/` (store.js, données de démo, config Supabase).
 - `css/style.css` : les styles, mobile d'abord.
-- `js/site.js` : chargement des zones, ronds colorés, fiche, compteur, géolocalisation. Commenté en français.
+- `js/site.js` : chargement des zones, ronds colorés, fiche, compteur, géolocalisation, signalement d'une zone. Commenté en français.
+
+## Signaler une zone (US21)
+
+Le bouton rouge « + Signaler une zone » ouvre un formulaire. La position se donne par le GPS du téléphone (« Ma position GPS ») ou en touchant la carte (« Placer sur la carte » : le formulaire s'efface, un bandeau demande de toucher la carte, le point choisi apparaît en rond provisoire, puis le formulaire revient). La photo est facultative, réduite à 1024 px avant d'être enregistrée (`../commun/js/photos.js`). À l'envoi la zone est créée en rouge dans la couche de données, le rond apparaît sur la carte, le compteur monte et la fiche de la nouvelle zone s'ouvre.
+
+En mode local, tout reste dans le localStorage du navigateur (clé `gzd.zones`), photo comprise sous forme de data URL. Pour revenir aux 15 zones de démo : dans la console du navigateur, `GZD.store.reinitialiser()` puis recharger la page.
 
 ## Ouvrir en local
 

@@ -7,6 +7,9 @@
  * Sprint 2 (US2)    : les zones viennent de la couche de données (commun/js/store.js,
  *                     mode local ou Supabase), bouton « Autour de moi » qui
  *                     recentre la carte sur la position de la personne.
+ * Sprint 2 (US21)   : signaler une zone sale : position GPS ou point touché sur
+ *                     la carte, photo réduite, type et quantité, enregistrement
+ *                     dans la couche de données, puis le rond rouge apparaît.
  *
  * Pas de framework ni d'étape de build : du JavaScript classique chargé par
  * des balises <script> dans index.html. Leaflet (variable globale « L ») et
@@ -70,7 +73,11 @@
   var coucheZones = L.layerGroup().addTo(carte);
 
   // Un clic sur la carte (en dehors d'un rond) ferme le panneau ouvert.
-  carte.on('click', function () { fermerPanneaux(); });
+  // Pendant le signalement, en mode « placer sur la carte », le clic fixe
+  // au contraire la position de la zone (voir la partie 8).
+  carte.on('click', function (evenement) {
+    if (modePlacement) { placerSur(evenement.latlng); } else { fermerPanneaux(); }
+  });
 
   /* ------------------------------------------------------------------ */
   /* 4. Chargement et affichage des zones                                */
@@ -95,7 +102,9 @@
   function ajouterMarqueur(zone) {
     var rond = L.circleMarker([zone.lat, zone.lon], styleDuRond(zone.etat));
     rond.bindTooltip(zone.nom, { direction: 'top', offset: [0, -10] });
-    rond.on('click', function () { ouvrirFiche(zone); });
+    rond.on('click', function (evenement) {
+      if (modePlacement) { placerSur(evenement.latlng); } else { ouvrirFiche(zone); }
+    });
     rond.addTo(coucheZones);
     marqueurs[zone.id] = rond;
     return rond;
@@ -130,20 +139,31 @@
 
   var panneaux = Array.prototype.slice.call(document.querySelectorAll('.panneau'));
 
-  /** Ouvre un panneau et ferme tous les autres. */
+  /**
+   * Ouvre un panneau et ferme tous les autres. Le focus va sur le panneau
+   * (tabindex="-1" dans le HTML) : un lecteur d'écran annonce son titre et
+   * la touche Échap le ferme.
+   */
   function ouvrirPanneau(panneau) {
     panneaux.forEach(function (p) { if (p !== panneau) { p.hidden = true; } });
     panneau.hidden = false;
     panneau.scrollTop = 0;
+    if (panneau.hasAttribute('tabindex')) { panneau.focus({ preventScroll: true }); }
   }
 
-  /** Ferme tout et rend au rond sélectionné son apparence normale. */
+  /**
+   * Ferme tout et rend au rond sélectionné son apparence normale.
+   * Quitte aussi le mode « placer sur la carte » et retire le rond provisoire
+   * du signalement, s'il y en a un.
+   */
   function fermerPanneaux() {
     panneaux.forEach(function (p) { p.hidden = true; });
     if (zoneOuverte) {
       rafraichirMarqueur(zoneOuverte);
       zoneOuverte = null;
     }
+    if (modePlacement) { terminerPlacement(); }
+    retirerMarqueurBrouillon();
   }
 
   // Toutes les croix « fermer » des panneaux.
@@ -151,9 +171,11 @@
     bouton.addEventListener('click', fermerPanneaux);
   });
 
-  // La touche Échap ferme aussi.
+  // La touche Échap ferme aussi. Pendant le choix d'un point sur la carte,
+  // elle annule ce choix et rouvre le formulaire.
   document.addEventListener('keydown', function (evenement) {
-    if (evenement.key === 'Escape') { fermerPanneaux(); }
+    if (evenement.key !== 'Escape') { return; }
+    if (modePlacement) { annulerPlacement(); } else { fermerPanneaux(); }
   });
 
   /* ------------------------------------------------------------------ */
@@ -188,17 +210,20 @@
    * Sur petit écran le panneau recouvre le bas : on place le point dans la
    * partie haute de la carte. Sur grand écran le panneau est à gauche, on
    * décale le point vers la droite.
+   * Sans zoom, la carte glisse (panTo) ; avec un zoom, elle saute directement
+   * (setView), par exemple après un signalement ou depuis la liste.
    */
-  function recentrerSur(latlng) {
+  function recentrerSur(latlng, zoom) {
     var grandEcran = window.matchMedia('(min-width: 768px)').matches;
-    var zoom = carte.getZoom();
-    var point = carte.project(latlng, zoom);
+    var zoomCible = (zoom === undefined) ? carte.getZoom() : zoom;
+    var point = carte.project(latlng, zoomCible);
     if (grandEcran) {
       point = point.subtract([200, 0]);
     } else {
       point = point.add([0, Math.round(carte.getSize().y * 0.28)]);
     }
-    carte.panTo(carte.unproject(point, zoom));
+    var centre = carte.unproject(point, zoomCible);
+    if (zoom === undefined) { carte.panTo(centre); } else { carte.setView(centre, zoomCible); }
   }
 
   /* ------------------------------------------------------------------ */
@@ -249,7 +274,225 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 8. Compteur et petits utilitaires                                   */
+  /* 8. [S2][US21] Signaler une zone sale                                 */
+  /* ------------------------------------------------------------------ */
+
+  var elPanneauSignaler  = $('panneau-signaler');
+  var elFormSignaler     = $('form-signaler');
+  var elBandeauPlacement = $('bandeau-placement');
+  var elSignalerGps      = $('signaler-gps');
+  var elSignalerPosition = $('signaler-position');
+  var elSignalerApercu   = $('signaler-apercu');
+  var elSignalerErreur   = $('signaler-erreur');
+  var elSignalerEnvoyer  = $('signaler-envoyer');
+
+  // Le brouillon du signalement en cours : la position choisie (L.LatLng) et
+  // la photo déjà réduite (data URL JPEG), ou null.
+  var brouillon = { position: null, photo: null };
+  var modePlacement = false;    // vrai pendant « touchez la carte à l'endroit de la zone »
+  var marqueurBrouillon = null; // le rond provisoire posé sur la carte
+
+  // Rond provisoire : rouge un peu transparent, liseré blanc en pointillés.
+  var STYLE_BROUILLON = {
+    radius: 10, fillColor: ETATS.rouge.couleur, fillOpacity: 0.6,
+    color: '#FFFFFF', weight: 2, dashArray: '4 3', bubblingMouseEvents: false
+  };
+
+  // Le bouton flottant ouvre le formulaire, toujours avec un brouillon vide.
+  $('bouton-signaler').addEventListener('click', function () {
+    viderBrouillon();
+    ouvrirPanneau(elPanneauSignaler);
+  });
+
+  $('signaler-annuler').addEventListener('click', fermerPanneaux);
+
+  /** Remet le formulaire à zéro : position, photo, textes, message d'erreur. */
+  function viderBrouillon() {
+    elFormSignaler.reset();
+    brouillon = { position: null, photo: null };
+    retirerMarqueurBrouillon();
+    afficherPosition(null);
+    elSignalerApercu.hidden = true;
+    elSignalerApercu.removeAttribute('src');
+    cacherErreurSignalement();
+  }
+
+  function retirerMarqueurBrouillon() {
+    if (marqueurBrouillon) {
+      carte.removeLayer(marqueurBrouillon);
+      marqueurBrouillon = null;
+    }
+  }
+
+  /** Mémorise la position choisie, l'affiche et pose (ou déplace) le rond provisoire. */
+  function fixerPosition(latlng) {
+    brouillon.position = latlng;
+    afficherPosition(latlng);
+    if (!marqueurBrouillon) {
+      marqueurBrouillon = L.circleMarker(latlng, STYLE_BROUILLON)
+        .bindTooltip('Zone à signaler', { direction: 'top', offset: [0, -10] })
+        .addTo(carte);
+    } else {
+      marqueurBrouillon.setLatLng(latlng);
+    }
+    cacherErreurSignalement();
+  }
+
+  /** « Position : 48.3912, -4.4336 » ou « Position non définie. » */
+  function afficherPosition(latlng) {
+    if (latlng) {
+      elSignalerPosition.textContent = 'Position : ' + latlng.lat.toFixed(4) + ', ' + latlng.lng.toFixed(4);
+      elSignalerPosition.classList.add('ok');
+    } else {
+      elSignalerPosition.textContent = 'Position non définie.';
+      elSignalerPosition.classList.remove('ok');
+    }
+  }
+
+  // « Ma position GPS » : on réutilise localiser() de la partie 7.
+  elSignalerGps.addEventListener('click', function () {
+    elSignalerGps.disabled = true;
+    elSignalerGps.textContent = 'Recherche en cours...';
+    localiser()
+      .then(function (latlng) {
+        fixerPosition(latlng);
+        recentrerSur(latlng, Math.max(carte.getZoom(), ZOOM_AUTOUR_DE_MOI));
+      })
+      .catch(function (erreur) { afficherErreurSignalement(erreur.message); })
+      .then(function () {
+        elSignalerGps.disabled = false;
+        elSignalerGps.textContent = 'Ma position GPS';
+      });
+  });
+
+  // « Placer sur la carte » : le formulaire se cache, un bandeau explique quoi
+  // faire et le prochain toucher sur la carte fixe la position.
+  $('signaler-placer').addEventListener('click', commencerPlacement);
+  $('annuler-placement').addEventListener('click', annulerPlacement);
+
+  function commencerPlacement() {
+    modePlacement = true;
+    elPanneauSignaler.hidden = true;
+    elBandeauPlacement.hidden = false;
+    carte.getContainer().classList.add('curseur-cible');
+    $('annuler-placement').focus({ preventScroll: true });
+  }
+
+  function terminerPlacement() {
+    modePlacement = false;
+    elBandeauPlacement.hidden = true;
+    carte.getContainer().classList.remove('curseur-cible');
+  }
+
+  /** Le point touché devient la position du signalement, et le formulaire revient. */
+  function placerSur(latlng) {
+    terminerPlacement();
+    fixerPosition(latlng);
+    ouvrirPanneau(elPanneauSignaler);
+    recentrerSur(latlng);
+  }
+
+  function annulerPlacement() {
+    terminerPlacement();
+    ouvrirPanneau(elPanneauSignaler);
+  }
+
+  // Photo : lue et réduite tout de suite (1024 px max), aperçu sous le champ.
+  $('signaler-photo').addEventListener('change', function (evenement) {
+    var champ = evenement.target;
+    var fichier = champ.files && champ.files[0];
+    brouillon.photo = null;
+    elSignalerApercu.hidden = true;
+    if (!fichier) { return; }
+    GZD.photos.lireEtReduire(fichier)
+      .then(function (dataUrl) {
+        brouillon.photo = dataUrl;
+        elSignalerApercu.src = dataUrl;
+        elSignalerApercu.hidden = false;
+        cacherErreurSignalement();
+      })
+      .catch(function (erreur) {
+        champ.value = '';
+        afficherErreurSignalement(erreur.message);
+      });
+  });
+
+  // Envoi du formulaire : vérifications, photo puis zone, et la carte se met à jour.
+  elFormSignaler.addEventListener('submit', function (evenement) {
+    evenement.preventDefault();
+
+    var type = $('signaler-type').value;
+    var quantite = $('signaler-quantite').value;
+
+    if (!brouillon.position) {
+      afficherErreurSignalement('Indiquez où se trouve la zone : votre position GPS ou un point sur la carte.');
+      elSignalerGps.focus();
+      return;
+    }
+    if (!type || !quantite) {
+      afficherErreurSignalement('Choisissez le type de déchet et la quantité.');
+      return;
+    }
+    cacherErreurSignalement();
+
+    var nouvelleZone = {
+      nom: $('signaler-nom').value.trim() || 'Zone signalée',
+      commune: $('signaler-commune').value.trim() || 'Rade de Brest',
+      etat: 'rouge',
+      type: type,
+      quantite: quantite,
+      lat: brouillon.position.lat,
+      lon: brouillon.position.lng,
+      description: $('signaler-description').value.trim(),
+      signale_le: new Date().toISOString(),
+      photo_url: null
+    };
+
+    elSignalerEnvoyer.disabled = true;
+    elSignalerEnvoyer.textContent = 'Envoi en cours...';
+
+    // S'il y a une photo, on l'enregistre d'abord pour connaître son URL.
+    var photoEnregistree = brouillon.photo
+      ? store.enregistrerPhoto(brouillon.photo, GZD.photos.nomDeFichier('signalement'))
+      : Promise.resolve(null);
+
+    photoEnregistree
+      .then(function (url) {
+        nouvelleZone.photo_url = url || null;
+        return store.ajouterZone(nouvelleZone);
+      })
+      .then(function (zone) {
+        zones.push(zone);
+        ajouterMarqueur(zone);
+        mettreAJourCompteur();
+        viderBrouillon();
+        fermerPanneaux();
+        recentrerSur(L.latLng(zone.lat, zone.lon), Math.max(carte.getZoom(), ZOOM_AUTOUR_DE_MOI));
+        ouvrirFiche(zone);
+        afficherToast('Merci, la zone est signalée');
+      })
+      .catch(function (erreur) {
+        console.error('Signalement impossible :', erreur);
+        afficherErreurSignalement(erreur.message || 'Enregistrement impossible, réessayez.');
+      })
+      .then(function () {
+        elSignalerEnvoyer.disabled = false;
+        elSignalerEnvoyer.textContent = 'Signaler cette zone';
+      });
+  });
+
+  function afficherErreurSignalement(texte) {
+    elSignalerErreur.textContent = texte;
+    elSignalerErreur.hidden = false;
+  }
+
+  function cacherErreurSignalement() {
+    elSignalerErreur.hidden = true;
+    elSignalerErreur.textContent = '';
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 9. Compteur et petits utilitaires                                   */
   /* ------------------------------------------------------------------ */
 
   /**
@@ -283,5 +526,15 @@
     elMessage.hidden = false;
     clearTimeout(minuteurMessage);
     minuteurMessage = setTimeout(function () { elMessage.hidden = true; }, 8000);
+  }
+
+  /** Confirmation courte (vert) en haut de la carte, qui disparaît après 4 s. */
+  var elToast = $('toast');
+  var minuteurToast = null;
+  function afficherToast(texte) {
+    elToast.textContent = texte;
+    elToast.hidden = false;
+    clearTimeout(minuteurToast);
+    minuteurToast = setTimeout(function () { elToast.hidden = true; }, 4000);
   }
 })();
