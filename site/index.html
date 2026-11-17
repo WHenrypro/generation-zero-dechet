@@ -68,6 +68,8 @@
         <li><span class="puce puce-orange"></span> En cours</li>
         <li><span class="puce puce-vert"></span> Nettoyée</li>
       </ul>
+      <!-- [S3][US5] Passage vers l'app du ramassage -->
+      <p class="mention"><a class="lien-app" href="../app/">L'app du ramassage</a></p>
       <p class="mention">Prototype pédagogique · ISEN Brest · Zones fictives.</p>
     </aside>
 
@@ -123,12 +125,11 @@
         </div>
       </div>
 
-      <!-- Bouton prévu au Sprint 3 (Léa choisit une zone et s'y rend).
-           Il est volontairement désactivé pour l'instant. -->
-      <button type="button" class="bouton-principal" id="bouton-jy-vais" disabled>
-        J'y vais <span class="etiquette">Sprint 3</span>
-      </button>
-      <p class="aide">Fonction prévue au sprint 3 : choisir la zone et s'y rendre.</p>
+      <!-- [S3][US5] Léa choisit la zone et s'y rend : le lien ouvre l'app sur cette zone
+           (../app/?zone=<id>). Pour une zone déjà nettoyée, le lien est caché. -->
+      <a class="bouton-principal" id="bouton-jy-vais" href="../app/">J'y vais avec l'app</a>
+      <p class="aide" id="jy-vais-aide">Ouvre l'app du ramassage sur cette zone.</p>
+      <p class="aide" id="jy-vais-nettoyee" hidden>Déjà nettoyée, merci à l'équipe qui est passée.</p>
     </section>
 
     <!-- [S3][US3] Liste des zones rouges, de la plus proche à la plus loin (Léa cherche où aller) -->
