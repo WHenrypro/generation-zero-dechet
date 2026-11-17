@@ -142,13 +142,41 @@ main {
 .puce-orange { background: var(--etat-orange); }
 .puce-vert   { background: var(--etat-vert); }
 
+/* ---------- [S2][US2] Outils de la carte (sous les boutons de zoom, à droite) ---------- */
+
+.outils-carte {
+  position: absolute;
+  top: 84px;
+  right: 10px;
+  z-index: 800;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bouton-carte {
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--bleu-fonce);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--ombre);
+}
+
+.bouton-carte:hover {
+  background: var(--blanc);
+}
+
 /* ---------- Message d'erreur ---------- */
 
 .message {
   position: absolute;
   top: 12px;
-  left: 60px;  /* laisse la place aux boutons de zoom de Leaflet */
-  right: 12px;
+  left: 12px;
+  right: 60px; /* laisse la place aux boutons de zoom de Leaflet, à droite */
   z-index: 950;
   padding: 10px 14px;
   border-left: 4px solid var(--etat-orange);
@@ -159,9 +187,10 @@ main {
   font-size: 0.9rem;
 }
 
-/* ---------- Fiche d'une zone ---------- */
+/* ---------- Panneaux (fiche d'une zone, formulaires) ---------- */
+/* Sur mobile un panneau monte depuis le bas ; sur grand écran il se place à gauche. */
 
-.fiche {
+.panneau {
   position: absolute;
   left: 0;
   right: 0;
@@ -175,11 +204,11 @@ main {
   box-shadow: 0 -4px 20px rgba(15, 79, 143, 0.25);
 }
 
-.fiche[hidden] {
+.panneau[hidden] {
   display: none;
 }
 
-.fiche-fermer {
+.panneau-fermer {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -308,20 +337,27 @@ main {
     font-size: 1.35rem;
   }
 
-  /* La fiche devient un panneau à droite au lieu de monter depuis le bas */
-  .fiche {
-    left: auto;
+  /* Le panneau se place à gauche au lieu de monter depuis le bas */
+  .panneau {
+    left: 16px;
     top: 16px;
-    right: 16px;
+    right: auto;
     bottom: 16px;
-    width: 360px;
+    width: 380px;
     max-height: none;
     border-radius: var(--rayon);
   }
 
+  /* La légende passe à droite pour ne pas être recouverte par le panneau */
   .legende {
-    left: 16px;
+    left: auto;
+    right: 16px;
     bottom: 32px;
     font-size: 0.9rem;
+  }
+
+  .outils-carte {
+    top: 96px;
+    right: 16px;
   }
 }
