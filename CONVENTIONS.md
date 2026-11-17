@@ -5,7 +5,8 @@ Le but : qu'on retrouve chaque sprint dans l'historique, sans effort, pour le li
 ## Branches
 
 - `main` : ce qui est testé et montrable. C'est ce qu'on présente en revue croisée.
-- Une branche par item du sprint, nommée `sN/item-mot-cle` : `s1/t1-environnement`, `s1/t2-base-photos`, `s1/t3-donnees-demo`, `s2/us2-carte`, `s2/us21-signaler`, etc.
+- Une branche par item du sprint, nommée `sN/item-mot-cle` : `s1/t1-environnement`, `s1/t2-base-photos`, `s1/t3-donnees-demo`, `s2/us2-carte`, `s2/us21-signaler`, etc. Quand un item touche le site et l'app, deux branches : `s3/us5-y-aller-site` et `s3/us5-y-aller-app`.
+- Le site (`site/`) et l'app (`app/`) peuvent avancer en parallèle sur leurs branches sans se gêner ; ce qui est partagé est dans `commun/` et se change sur sa propre branche, fusionnée avant les autres.
 - On fusionne sur `main` dès que l'item est terminé (testé, ça marche en local, le kanban Miro passe à « Terminé »). Pas de fusion d'un truc cassé pour « gagner du temps ».
 
 ## Commits
@@ -27,4 +28,4 @@ Le tag `sprint-1` marque l'état exact présenté en revue. On remplit en même 
 
 ## Ce qu'on ne commite pas
 
-`app/js/config.js` (clés Supabase), fichiers `.env`, `.DS_Store`. Voir `.gitignore`.
+`commun/js/config.js` (clés Supabase), fichiers `.env`, `.DS_Store`. Voir `.gitignore`.
