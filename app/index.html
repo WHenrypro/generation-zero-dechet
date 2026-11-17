@@ -44,8 +44,64 @@
 
       <!-- Onglet Ramasser : choisir une zone, photos, publier (US5, US7, US9, US10) -->
       <section id="onglet-ramasser" class="ecran" role="tabpanel" aria-labelledby="tab-ramasser" tabindex="-1" hidden>
-        <h2>Ramasser</h2>
-        <p class="a-venir">Le choix d'une zone rouge arrive au prochain item.</p>
+
+        <!-- [S3][US5] Vue 1 : aucun ramassage en cours, on choisit une zone rouge -->
+        <div id="vue-zones" hidden>
+          <h2>Ramasser</h2>
+          <p class="aide" id="zones-position" aria-live="polite"></p>
+
+          <!-- Zone arrivée par le lien « J'y vais » de la carte (../app/?zone=id) -->
+          <div id="zone-choisie" hidden>
+            <p class="etiquette">Zone choisie depuis la carte</p>
+            <div id="zone-choisie-carte"></div>
+          </div>
+
+          <p class="etiquette" id="liste-zones-titre">Zones rouges, de la plus proche à la plus loin</p>
+          <div id="liste-zones" aria-labelledby="liste-zones-titre"></div>
+        </div>
+
+        <!-- [S3][US5] Vue 2 : un ramassage est en cours -->
+        <div id="vue-en-cours" hidden>
+          <h2>Ramassage en cours</h2>
+          <div class="carte carte-zone-en-cours">
+            <p class="etiquette">Zone</p>
+            <p class="nom-zone" id="en-cours-nom"></p>
+            <p class="aide aide-zone" id="en-cours-commune"></p>
+            <a class="lien" id="en-cours-lien-carte" href="../site/">Voir sur la carte</a>
+          </div>
+
+          <ol class="etapes" aria-label="Les étapes du ramassage">
+            <li class="etape" id="etape-1" data-etat="courante">
+              <span class="numero" aria-hidden="true">1</span>
+              <div class="etape-corps">
+                <h3>Photo avant</h3>
+                <p class="aide a-venir-etape">La photo avant arrive au prochain item.</p>
+              </div>
+            </li>
+            <li class="etape" id="etape-2" data-etat="a-venir">
+              <span class="numero" aria-hidden="true">2</span>
+              <div class="etape-corps">
+                <h3>Ramasser</h3>
+                <p class="aide">Ramasse, on t'attend.</p>
+              </div>
+            </li>
+            <li class="etape" id="etape-3" data-etat="a-venir">
+              <span class="numero" aria-hidden="true">3</span>
+              <div class="etape-corps">
+                <h3>Photo après</h3>
+              </div>
+            </li>
+            <li class="etape" id="etape-4" data-etat="a-venir">
+              <span class="numero" aria-hidden="true">4</span>
+              <div class="etape-corps">
+                <h3>Publier</h3>
+              </div>
+            </li>
+          </ol>
+
+          <button type="button" id="bouton-abandonner" class="bouton bouton-lien">Abandonner ce ramassage</button>
+        </div>
+
       </section>
 
       <!-- [S3][US1] Onglet Moi : le pseudo et deux ou trois réglages -->

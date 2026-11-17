@@ -263,6 +263,178 @@ label {
   color: #6B7A8C;
 }
 
+.lien {
+  color: var(--vert-clair);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lien:hover {
+  text-decoration: underline;
+}
+
+/* ---------- [S3][US5] Cartes de zones ---------- */
+
+.carte-zone h3,
+.nom-zone {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.carte-zone .commune,
+.aide-zone {
+  margin: 2px 0 10px;
+  color: var(--texte-doux);
+  font-size: 0.9rem;
+}
+
+.carte-zone.mise-en-avant {
+  border-color: var(--vert);
+  box-shadow: 0 0 0 1px var(--vert);
+}
+
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.details li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--fond-carte-2);
+  border: 1px solid var(--bord);
+  font-size: 0.82rem;
+  color: var(--texte);
+}
+
+.details li.distance {
+  color: var(--vert-clair);
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: var(--texte-doux);
+}
+
+.badge-rouge  { background: var(--rouge); }
+.badge-orange { background: var(--orange); color: var(--texte-sombre); }
+.badge-vert   { background: var(--vert); }
+
+.actions-ligne {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.actions-ligne .bouton {
+  padding: 13px 10px;
+  font-size: 0.98rem;
+}
+
+.vide {
+  margin: 0;
+  padding: 24px 16px;
+  border: 1px dashed var(--bord);
+  border-radius: var(--rayon);
+  color: var(--texte-doux);
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* ---------- [S3][US5] Ramassage en cours : les étapes ---------- */
+
+.etapes {
+  margin: 4px 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.etape {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  padding: 0 0 22px;
+}
+
+/* Trait vertical entre les numéros */
+.etape:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: 0;
+  width: 2px;
+  background: var(--bord);
+}
+
+.etape .numero {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--fond-carte-2);
+  border: 2px solid var(--bord);
+  color: var(--texte-doux);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.etape-corps {
+  flex: 1;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.etape-corps h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.etape-corps .aide {
+  margin-bottom: 8px;
+}
+
+.etape[data-etat="courante"] .numero {
+  background: var(--vert-clair);
+  border-color: var(--vert-clair);
+  color: var(--texte-sombre);
+}
+
+.etape[data-etat="faite"] .numero {
+  background: var(--vert);
+  border-color: var(--vert);
+  color: #FFFFFF;
+}
+
+.etape[data-etat="faite"]:not(:last-child)::before {
+  background: var(--vert);
+}
+
+.etape[data-etat="a-venir"] .etape-corps {
+  opacity: 0.55;
+}
+
+/* Le contenu interactif d'une étape n'apparaît que quand elle est en cours */
+.etape:not([data-etat="courante"]) .seulement-courante {
+  display: none;
+}
+
 /* ---------- Écran pseudo ---------- */
 
 .ecran-pseudo {
