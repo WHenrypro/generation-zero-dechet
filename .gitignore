@@ -1,0 +1,14 @@
+# Clés et secrets
+app/js/config.js
+.env
+.env.*
+
+# Système et éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dépendances si un jour on en ajoute
+node_modules/
+*.log
