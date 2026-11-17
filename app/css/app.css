@@ -662,6 +662,35 @@ label {
   font-weight: 600;
 }
 
+/* ---------- [S4][US11] Zone passée au vert ---------- */
+
+.carte-bravo {
+  text-align: center;
+  padding-top: 26px;
+}
+
+.carte-bravo h2 {
+  margin: 12px 0 8px;
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.carte-bravo #bravo-zone {
+  color: var(--green);
+}
+
+.carte-bravo .aide {
+  margin-bottom: 18px;
+}
+
+.carte-demo {
+  margin-top: 18px;
+}
+
+.carte-demo .aide {
+  margin-bottom: 12px;
+}
+
 /* ---------- Écran pseudo ---------- */
 
 .ecran-pseudo {
